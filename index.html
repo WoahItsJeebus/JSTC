@@ -29,12 +29,10 @@
 
       <!-- Toolbar: scrolls on narrow screens + fades only when overflow exists -->
       <div class="toolbar hScroll fadeScroll" id="toolbarScroll">
-        <div class="pill" id="nowPill">Now: —</div>
-        <div class="pill" id="localTzPill">Local TZ: —</div>
-        <div class="pill" id="resetTzPill">Reset TZ: —</div>
-        <button id="refreshBtn" type="button">Refresh</button>
-		<button id="hardRefreshBtn" type="button" title="Hard refresh">↻</button>
-
+		  <div class="pill" id="nowPill">Now: —</div>
+		  <div class="pill" id="localTzPill">Local TZ: —</div>
+		  <div class="pill" id="resetTzPill">Reset TZ: —</div>
+		  <!-- <button id="refreshBtn" type="button">Refresh</button> -->
       </div>
     </header>
 
@@ -89,7 +87,8 @@
     </div>
 
 	<div class="footer">
-	  <code class="inline" id="versionCode">v—</code>
+		<button id="hardRefreshBtn" type="button" title="Hard refresh">↻</button>
+		<code class="inline" id="versionCode">v—</code>
 	</div>
 
 	<div class="tabsBar">
@@ -107,7 +106,7 @@
  * ============================================================
  */
 
-const APP_VERSION = "1.2.7";
+const APP_VERSION = "1.2.8";
 
 /**
  * Reset definition timezone:
@@ -138,7 +137,7 @@ const dailyDot     = document.getElementById("dailyDot");
 const weeklyDot    = document.getElementById("weeklyDot");
 const versionCode  = document.getElementById("versionCode");
 
-document.getElementById("refreshBtn").addEventListener("click", () => render(true));
+// document.getElementById("refreshBtn").addEventListener("click", () => render(true));
 document.getElementById("hardRefreshBtn")?.addEventListener("click", hardReload);
 
 function hardReload(){
