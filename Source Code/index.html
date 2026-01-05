@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Skate. Reset Timers (Central-time anchored)</title>
+  <style>
+    :root{
+      --bg:#0b0f17;
+      --card:#121a2a;
+      --text:#e7edf7;
+      --muted:#a9b4c7;
+      --border:rgba(255,255,255,.08);
+      --good:#3ddc97;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --ui: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:var(--ui);
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(122,162,255,.15), transparent 60%),
+                  radial-gradient(900px 600px at 85% 40%, rgba(61,220,151,.10), transparent 55%),
+                  var(--bg);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      padding:24px;
+    }
+    .wrap{ width:min(1040px, 100%); }
+    header{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px 16px;
+      align-items:baseline;
+      justify-content:space-between;
+      margin-bottom:14px;
+    }
+    h1{ font-size:20px; margin:0; letter-spacing:.2px; }
+    .sub{ color:var(--muted); font-size:13px; margin-top:6px; line-height:1.35; }
+    .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+    .pill{
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(0,0,0,.15);
+      white-space:nowrap;
+    }
+    button{
+      appearance:none;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      color:var(--text);
+      padding:8px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:13px;
+    }
+    button:hover{ border-color:rgba(255,255,255,.16); }
+    button:active{ transform:translateY(1px); }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+    @media (min-width: 900px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+    .card{
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    }
+    .card .head{
+      padding:14px 14px 10px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+    }
+    .card .title{
+      font-weight:800;
+      letter-spacing:.2px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .tag{
+      font-size:12px;
+      font-weight:800;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+      font-family:var(--mono);
+    }
+    table{ width:100%; border-collapse:collapse; }
+    thead th{
+      text-align:left;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+      padding:10px 14px;
+      border-bottom:1px solid var(--border);
+      background: rgba(0,0,0,.10);
+    }
+    tbody td{
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.05);
+      vertical-align:top;
+      font-size:13px;
+    }
+    tbody tr:last-child td{ border-bottom:none; }
+    .mono{ font-family:var(--mono); }
+    .muted{ color:var(--muted); }
+    .right{ text-align:right; }
+
+    .statusDot{
+      width:10px; height:10px; border-radius:50%;
+      background:var(--good);
+      box-shadow:0 0 0 3px rgba(61,220,151,.10);
+      flex:0 0 auto;
+    }
+    .statusDot.warn{
+      background:var(--warn);
+      box-shadow:0 0 0 3px rgba(255,204,102,.10);
+    }
+    .statusDot.bad{
+      background:var(--bad);
+      box-shadow:0 0 0 3px rgba(255,107,107,.12);
+    }
+
+    .footer{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+    code.inline{
+      font-family:var(--mono);
+      font-size:12px;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Skate. Reset Timers</h1>
+        <div class="sub">
+          Reset rules are anchored to <code class="inline">America/Chicago</code>:
+          daily at <code class="inline">12:00</code>, weekly on <code class="inline">Monday 12:00</code>.
+          This stays correct through CST/CDT automatically.
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="pill" id="nowPill">Now: —</div>
+        <div class="pill" id="localTzPill">Local TZ: —</div>
+        <div class="pill" id="anchorTzPill">Anchor TZ: —</div>
+        <button id="refreshBtn" type="button">Refresh</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="head">
+          <div class="title"><span class="statusDot" id="dailyDot"></span>Daily</div>
+          <div class="tag">COUNTDOWN</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:28%">Timer</th>
+              <th style="width:24%">Next (Central)</th>
+              <th style="width:24%">Next (UTC)</th>
+              <th class="right" style="width:24%">Remaining</th>
+            </tr>
+          </thead>
+          <tbody id="dailyBody"></tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <div class="head">
+          <div class="title"><span class="statusDot" id="weeklyDot"></span>Weekly</div>
+          <div class="tag">COUNTDOWN</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:28%">Timer</th>
+              <th style="width:24%">Next (Central)</th>
+              <th style="width:24%">Next (UTC)</th>
+              <th class="right" style="width:24%">Remaining</th>
+            </tr>
+          </thead>
+          <tbody id="weeklyBody"></tbody>
+        </table>
+      </section>
+    </div>
+
+    <div class="footer">
+      Edit only the config in the <code class="inline">timers</code> array below.
+      Weekly <code class="inline">day</code>: <code class="inline">0</code>=Sun … <code class="inline">6</code>=Sat.
+    </div>
+  </div>
+
+<script>
+/**
+ * ============================================================
+ * CONFIG
+ * ============================================================
+ * Anchor timezone for the reset definition:
+ *   "America/Chicago" means noon Central, with DST handled.
+ */
+const ANCHOR_TZ = "America/Chicago";
+
+/**
+ * Timers:
+ *  - time is wall-clock time in ANCHOR_TZ
+ *  - day: weekly only, 0..6 where 1=Monday in JS is actually 1, yes (0=Sunday)
+ */
+const timers = [
+  { name: "Daily Challenges Reset",  kind: "daily",  time: "12:00:00", enabled: true },
+  { name: "Weekly Challenges Reset", kind: "weekly", day: 1, time: "12:00:00", enabled: true }, // Monday
+];
+
+// ---- DOM refs
+const dailyBody    = document.getElementById("dailyBody");
+const weeklyBody   = document.getElementById("weeklyBody");
+const nowPill      = document.getElementById("nowPill");
+const localTzPill  = document.getElementById("localTzPill");
+const anchorTzPill = document.getElementById("anchorTzPill");
+const dailyDot     = document.getElementById("dailyDot");
+const weeklyDot    = document.getElementById("weeklyDot");
+document.getElementById("refreshBtn").addEventListener("click", () => render(true));
+
+function pad2(n){ return String(n).padStart(2, "0"); }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  }[c]));
+}
+
+function parseTime(s){
+  const parts = String(s||"").trim().split(":");
+  if (parts.length < 2 || parts.length > 3) return null;
+  const h = Number(parts[0]), m = Number(parts[1]), sec = parts.length === 3 ? Number(parts[2]) : 0;
+  if (![h,m,sec].every(Number.isFinite)) return null;
+  if (h<0||h>23||m<0||m>59||sec<0||sec>59) return null;
+  return {h,m,sec};
+}
+
+function formatDuration(totalSec){
+  totalSec = Math.max(0, Math.floor(totalSec));
+  const days = Math.floor(totalSec / 86400);
+  totalSec %= 86400;
+  const hrs = Math.floor(totalSec / 3600);
+  totalSec %= 3600;
+  const mins = Math.floor(totalSec / 60);
+  const secs = totalSec % 60;
+  if (days > 0) return `${days}d ${pad2(hrs)}:${pad2(mins)}:${pad2(secs)}`;
+  return `${pad2(hrs)}:${pad2(mins)}:${pad2(secs)}`;
+}
+
+function urgencyDot(dotEl, minRemaining){
+  dotEl.classList.remove("warn","bad");
+  if (minRemaining <= 300) dotEl.classList.add("bad");        // <= 5 min
+  else if (minRemaining <= 3600) dotEl.classList.add("warn"); // <= 1 hour
+}
+
+/**
+ * Get wall-clock parts for a UTC Date in a given IANA timeZone.
+ * Returns numbers: year, month(1-12), day(1-31), hour, minute, second, weekday(0-6)
+ */
+function getZonedParts(dateUtc, timeZone){
+  const dtf = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year:"numeric", month:"2-digit", day:"2-digit",
+    hour:"2-digit", minute:"2-digit", second:"2-digit",
+    hour12:false,
+    weekday:"short",
+  });
+  const parts = dtf.formatToParts(dateUtc);
+  const map = {};
+  for (const p of parts){
+    if (p.type !== "literal") map[p.type] = p.value;
+  }
+  const wdMap = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+  return {
+    year: Number(map.year),
+    month: Number(map.month),
+    day: Number(map.day),
+    hour: Number(map.hour),
+    minute: Number(map.minute),
+    second: Number(map.second),
+    weekday: wdMap[map.weekday] ?? 0,
+  };
+}
+
+/**
+ * Compute timezone offset (minutes) for a given UTC Date as seen in timeZone.
+ * offsetMinutes = localTime - utcTime (so Chicago winter ≈ -360)
+ */
+function tzOffsetMinutes(dateUtc, timeZone){
+  const z = getZonedParts(dateUtc, timeZone);
+  const asIfUtc = Date.UTC(z.year, z.month-1, z.day, z.hour, z.minute, z.second);
+  return (asIfUtc - dateUtc.getTime()) / 60000;
+}
+
+/**
+ * Convert a wall time (y,m,d,h,mi,s) in timeZone into a real UTC Date.
+ * Uses a 2-pass offset solve to handle DST boundaries.
+ */
+function wallToUtcDate(y, m, d, h, mi, s, timeZone){
+  const naiveUtcMs = Date.UTC(y, m-1, d, h, mi, s);
+  // pass 1
+  let guess = new Date(naiveUtcMs);
+  let off1 = tzOffsetMinutes(guess, timeZone);
+  let utcMs1 = naiveUtcMs - off1 * 60000;
+  // pass 2
+  guess = new Date(utcMs1);
+  let off2 = tzOffsetMinutes(guess, timeZone);
+  let utcMs2 = naiveUtcMs - off2 * 60000;
+  return new Date(utcMs2);
+}
+
+function addDaysToYMD(y, m, d, days){
+  // calendar-safe date rolling using UTC midnight
+  const base = new Date(Date.UTC(y, m-1, d, 0, 0, 0));
+  base.setUTCDate(base.getUTCDate() + days);
+  return { y: base.getUTCFullYear(), m: base.getUTCMonth()+1, d: base.getUTCDate() };
+}
+
+function fmtInTZ(dateUtc, timeZone){
+  const z = getZonedParts(dateUtc, timeZone);
+  return `${z.year}-${pad2(z.month)}-${pad2(z.day)} ${pad2(z.hour)}:${pad2(z.minute)}:${pad2(z.second)}`;
+}
+function fmtUtc(dateUtc){
+  return `${dateUtc.getUTCFullYear()}-${pad2(dateUtc.getUTCMonth()+1)}-${pad2(dateUtc.getUTCDate())} `
+       + `${pad2(dateUtc.getUTCHours())}:${pad2(dateUtc.getUTCMinutes())}:${pad2(dateUtc.getUTCSeconds())}`;
+}
+
+function compareWallTimeToTarget(nowZ, tm){
+  // returns -1 if now < target, 0 if equal, +1 if now > target
+  if (nowZ.hour !== tm.h) return nowZ.hour < tm.h ? -1 : 1;
+  if (nowZ.minute !== tm.m) return nowZ.minute < tm.m ? -1 : 1;
+  if (nowZ.second !== tm.sec) return nowZ.second < tm.sec ? -1 : 1;
+  return 0;
+}
+
+function nextDailyAnchored(nowUtc, timeObj){
+  const nowZ = getZonedParts(nowUtc, ANCHOR_TZ);
+  let targetY = nowZ.year, targetM = nowZ.month, targetD = nowZ.day;
+
+  if (compareWallTimeToTarget(nowZ, timeObj) >= 0){
+    // already hit/passed today's noon in Central -> tomorrow
+    const nxt = addDaysToYMD(targetY, targetM, targetD, 1);
+    targetY = nxt.y; targetM = nxt.m; targetD = nxt.d;
+  }
+
+  return wallToUtcDate(targetY, targetM, targetD, timeObj.h, timeObj.m, timeObj.sec, ANCHOR_TZ);
+}
+
+function nextWeeklyAnchored(nowUtc, targetWeekday, timeObj){
+  const nowZ = getZonedParts(nowUtc, ANCHOR_TZ);
+  let daysUntil = (targetWeekday - nowZ.weekday + 7) % 7;
+
+  if (daysUntil === 0 && compareWallTimeToTarget(nowZ, timeObj) >= 0){
+    daysUntil = 7; // same weekday but already passed the target time -> next week
+  }
+
+  const tgt = addDaysToYMD(nowZ.year, nowZ.month, nowZ.day, daysUntil);
+  return wallToUtcDate(tgt.y, tgt.m, tgt.d, timeObj.h, timeObj.m, timeObj.sec, ANCHOR_TZ);
+}
+
+function addRow(kind, name, nextCentral, nextUtc, remainStr){
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${escapeHtml(name)}</td>
+    <td class="mono muted">${escapeHtml(nextCentral)}</td>
+    <td class="mono muted">${escapeHtml(nextUtc)}</td>
+    <td class="mono right">${escapeHtml(remainStr)}</td>
+  `;
+  if (String(kind).toLowerCase() === "weekly") weeklyBody.appendChild(tr);
+  else dailyBody.appendChild(tr);
+}
+
+function render(){
+  const nowUtc = new Date();
+  nowPill.textContent = `Now: ${nowUtc.toLocaleString(undefined, { hour12:false })}`;
+  localTzPill.textContent = `Local TZ: ${Intl.DateTimeFormat().resolvedOptions().timeZone || "Local"}`;
+  anchorTzPill.textContent = `Anchor TZ: ${ANCHOR_TZ}`;
+
+  dailyBody.textContent = "";
+  weeklyBody.textContent = "";
+
+  let minDaily = Infinity;
+  let minWeekly = Infinity;
+
+  for (const t of timers){
+    if (!t || !t.enabled) continue;
+
+    const tm = parseTime(t.time);
+    if (!tm){
+      addRow(t.kind, t.name || "Unnamed", "CONFIG ERROR", "—", "—");
+      continue;
+    }
+
+    let nextUtcDate;
+    const kind = String(t.kind||"").toLowerCase();
+
+    if (kind === "daily"){
+      nextUtcDate = nextDailyAnchored(nowUtc, tm);
+    } else if (kind === "weekly"){
+      const wd = Number.isFinite(t.day) ? t.day : NaN;
+      if (!(wd >= 0 && wd <= 6)){
+        addRow("weekly", t.name || "Unnamed", "CONFIG ERROR", "—", "—");
+        continue;
+      }
+      nextUtcDate = nextWeeklyAnchored(nowUtc, wd, tm);
+    } else {
+      addRow(t.kind, t.name || "Unnamed", "CONFIG ERROR", "—", "—");
+      continue;
+    }
+
+    const remaining = Math.max(0, Math.floor((nextUtcDate.getTime() - nowUtc.getTime()) / 1000));
+    if (kind === "daily") minDaily = Math.min(minDaily, remaining);
+    if (kind === "weekly") minWeekly = Math.min(minWeekly, remaining);
+
+    const nextCentralStr = fmtInTZ(nextUtcDate, ANCHOR_TZ);
+    const nextUtcStr = fmtUtc(nextUtcDate);
+
+    addRow(t.kind, t.name, nextCentralStr, nextUtcStr, formatDuration(remaining));
+  }
+
+  if (minDaily === Infinity) minDaily = 999999999;
+  if (minWeekly === Infinity) minWeekly = 999999999;
+  urgencyDot(dailyDot, minDaily);
+  urgencyDot(weeklyDot, minWeekly);
+}
+
+// start + tick
+render();
+setInterval(render, 1000);
+</script>
+</body>
+</html>
