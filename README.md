@@ -1,4 +1,4 @@
-# <font color="#00b7ffff" face="Consolas">JUMP — Jeebus' Unoptimized Minesweeper Player</font>
+# <font color="#00b7ffff" face="Consolas">JSTC — Jeebus' Skate. Timer Countdown</font>
 
 <font color="#00ffbfff" face="Consolas">JSTC is a web-based set of timers for tracking daily and weekly challenge resets for EA's Skate.
 
