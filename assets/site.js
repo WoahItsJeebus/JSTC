@@ -2,7 +2,7 @@
    site.js — shared helpers for all pages
    ============================================================ */
 
-/**
+   /**
  * ===== Fade scroll logic =====
  * Works with .fadeScroll + .isScrollable/.atStart/.atEnd CSS classes.
  */

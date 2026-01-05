@@ -27,6 +27,8 @@
         <div class="pill" id="localTzPill">Local TZ: —</div>
         <div class="pill" id="resetTzPill">Reset TZ: —</div>
         <button id="refreshBtn" type="button">Refresh</button>
+		<button id="hardRefreshBtn" type="button" title="Hard refresh">↻</button>
+
       </div>
     </header>
 
@@ -99,7 +101,7 @@
  * ============================================================
  */
 
-const APP_VERSION = "1.2.2";
+const APP_VERSION = "1.2.3";
 
 /**
  * Reset definition timezone:
@@ -131,6 +133,15 @@ const weeklyDot    = document.getElementById("weeklyDot");
 const versionCode  = document.getElementById("versionCode");
 
 document.getElementById("refreshBtn").addEventListener("click", () => render(true));
+document.getElementById("hardRefreshBtn")?.addEventListener("click", hardReload);
+
+function hardReload(){
+  // Force a re-request by changing the URL query.
+  // Works better than location.reload(true) (deprecated) and helps iOS PWA caching.
+  const url = new URL(location.href);
+  url.searchParams.set("_r", String(Date.now()));
+  location.replace(url.toString());
+}
 
 function pad2(n){ return String(n).padStart(2, "0"); }
 function escapeHtml(s){
