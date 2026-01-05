@@ -46,7 +46,7 @@
 						<th style="width:28%">Timer</th>
 						<th style="width:24%">Next (Local)</th>
 						<th style="width:24%">Next (UTC)</th>
-						<th class="right" style="width:24%">Remaining</th>
+						<th style="width:24%">Remaining</th>
 					</tr>
 					</thead>
 					<tbody id="dailyBody"></tbody>
@@ -70,7 +70,7 @@
 						<th style="width:28%">Timer</th>
 						<th style="width:24%">Next (Local)</th>
 						<th style="width:24%">Next (UTC)</th>
-						<th class="right" style="width:24%">Remaining</th>
+						<th style="width:24%">Remaining</th>
 					</tr>
 					</thead>
 					<tbody id="weeklyBody"></tbody>
@@ -273,7 +273,7 @@ function addRow(kind, name, nextLocal, nextUtc, remainStr){
     <td>${escapeHtml(name)}</td>
     <td class="mono muted">${escapeHtml(nextLocal)}</td>
     <td class="mono muted">${escapeHtml(nextUtc)}</td>
-    <td class="mono right">${escapeHtml(remainStr)}</td>
+    <td class="mono muted">${escapeHtml(remainStr)}</td>
   `;
   if (String(kind).toLowerCase() === "weekly") weeklyBody.appendChild(tr);
   else dailyBody.appendChild(tr);
