@@ -23,10 +23,10 @@ export function startOrbBackground(opts = {}){
     blurMax: 30,
     margin: 0.12, // allow off-screen spawns for nicer edges
     colors: [
-      [122,162,255], // blue
-      [61,220,151],  // green
-      [170,120,255], // purple
-      [255,204,102], // warm
+      [147, 176, 245], // blue
+      [116, 232, 168],  // green
+      [178, 134, 252], // purple
+      [255, 217, 140], // warm
     ],
     ...opts,
   };
