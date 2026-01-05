@@ -4,5 +4,4 @@
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/ae671d84-de4a-4196-994e-f636a40ea0d0"/>
-">
 </p>
