@@ -8,406 +8,8 @@
 	<!-- Favicon (put favicon.ico in the same folder as index.html) -->
 	<link rel="icon" href="favicon.ico" sizes="any">
 	<link rel="stylesheet" href="./assets/site.css">
-
-  <!-- <style>
-    :root{
-      --bg:#0b0f17;
-      --card:#121a2a;
-      --text:#e7edf7;
-      --muted:#a9b4c7;
-      --border:rgba(255,255,255,.08);
-      --good:#3ddc97;
-      --warn:#ffcc66;
-      --bad:#ff6b6b;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --ui: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      font-family:var(--ui);
-      color:var(--text);
-      background: radial-gradient(1200px 700px at 20% 10%, rgba(122,162,255,.15), transparent 60%),
-                  radial-gradient(900px 600px at 85% 40%, rgba(61,220,151,.10), transparent 55%),
-                  var(--bg);
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      padding:24px;
-    }
-    .wrap{ width:min(1280px, 100%); }
-    header{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px 16px;
-      align-items:baseline;
-      justify-content:space-between;
-      margin-bottom:14px;
-    }
-    h1{ font-size:20px; margin:0; letter-spacing:.2px; }
-    .sub{ color:var(--muted); font-size:13px; margin-top:6px; line-height:1.35; }
-
-    .toolbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
-
-    .pill{
-      font-family:var(--mono);
-      font-size:12px;
-      color:var(--muted);
-      padding:8px 10px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background:rgba(0,0,0,.15);
-      white-space:nowrap;
-    }
-    button{
-      appearance:none;
-      border:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      color:var(--text);
-      padding:8px 12px;
-      border-radius:10px;
-      cursor:pointer;
-      font-weight:600;
-      font-size:13px;
-      white-space:nowrap;
-    }
-    button:hover{ border-color:rgba(255,255,255,.16); }
-    button:active{ transform:translateY(1px); }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:14px;
-    }
-    @media (min-width: 900px){
-      .grid{ grid-template-columns: 1fr 1fr; }
-    }
-    .card{
-      border:1px solid var(--border);
-      border-radius:16px;
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-    }
-    .card .head{
-      padding:14px 14px 10px 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      border-bottom:1px solid var(--border);
-      background: rgba(0,0,0,.18);
-    }
-    .card .title{
-      font-weight:800;
-      letter-spacing:.2px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    .tag{
-      font-size:12px;
-      font-weight:800;
-      padding:4px 8px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      color:var(--muted);
-      font-family:var(--mono);
-      white-space:nowrap;
-    }
-
-    table{ width:100%; border-collapse:collapse; }
-    thead th{
-      text-align:left;
-      font-size:12px;
-      color:var(--muted);
-      font-weight:700;
-      padding:10px 14px;
-      border-bottom:1px solid var(--border);
-      background: rgba(0,0,0,.10);
-      white-space:nowrap;
-    }
-    tbody td{
-      padding:12px 14px;
-      border-bottom:1px solid rgba(255,255,255,.05);
-      vertical-align:top;
-      font-size:13px;
-    }
-    tbody tr:last-child td{ border-bottom:none; }
-    .mono{ font-family:var(--mono); }
-    .muted{ color:var(--muted); }
-    .right{ text-align:left; }
-
-    .statusDot{
-      width:10px; height:10px; border-radius:50%;
-      background:var(--good);
-      box-shadow:0 0 0 3px rgba(61,220,151,.10);
-      flex:0 0 auto;
-    }
-    .statusDot.warn{
-      background:var(--warn);
-      box-shadow:0 0 0 3px rgba(255,204,102,.10);
-    }
-    .statusDot.bad{
-      background:var(--bad);
-      box-shadow:0 0 0 3px rgba(255,107,107,.12);
-    }
-
-    .footer{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.45;
-    }
-    code.inline{
-      font-family:var(--mono);
-      font-size:12px;
-      padding:2px 6px;
-      border-radius:8px;
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.18);
-      color:var(--text);
-      white-space:nowrap;
-    }
-
-    a.inlineLink{
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,.18);
-      color: var(--text);
-      text-decoration: none;
-      display: inline-block;
-      white-space:nowrap;
-    }
-    a.inlineLink:hover{
-      border-color: rgba(255,255,255,.16);
-      text-decoration: underline;
-    }
-    a.inlineLink:active{
-      transform: translateY(1px);
-    }
-
-    .platformLinks{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-left:8px;
-      align-items:center;
-    }
-    a.platformLink{
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,.18);
-      color: var(--text);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      white-space:nowrap;
-      flex: 0 0 auto;
-    }
-    a.platformLink:hover{
-      border-color: rgba(255,255,255,.16);
-      text-decoration: underline;
-    }
-    a.platformLink:active{
-      transform: translateY(1px);
-    }
-    .platformIcon{
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-      flex: 0 0 auto;
-      image-rendering: auto;
-    }
-
-	/* Theme scrollbars (WebKit: Chrome/Safari/Edge) */
-	.tableScroll::-webkit-scrollbar,
-	.hScroll::-webkit-scrollbar{
-	  height: 10px;
-	}
-
-	.tableScroll::-webkit-scrollbar-track,
-	.hScroll::-webkit-scrollbar-track{
-	  background: transparent;
-	}
-
-	.tableScroll::-webkit-scrollbar-thumb,
-	.hScroll::-webkit-scrollbar-thumb{
-	  background: rgba(231,237,247,.18);
-	  border-radius: 999px;
-	  border: 3px solid transparent;     /* creates padding */
-	  background-clip: content-box;
-	}
-
-	.tableScroll::-webkit-scrollbar-thumb:hover,
-	.hScroll::-webkit-scrollbar-thumb:hover{
-	  background: rgba(231,237,247,.28);
-	  border: 3px solid transparent;
-	  background-clip: content-box;
-	}
-
-	/* Firefox */
-	.tableScroll, .hScroll{
-	  scrollbar-color: rgba(231,237,247,.22) transparent;
-	  scrollbar-width: thin;
-	}
-
-	/* Bottom Tabs */
-	.tabsBar{
-	  margin-top: 14px;
-	  padding-top: 12px;
-	  border-top: 1px solid var(--border);
-	  display: flex;
-	  justify-content: center;
-	}
-
-	.tabs{
-	  display:flex;
-	  gap:8px;
-	  flex-wrap:wrap;
-	  align-items:center;
-	  justify-content:center;
-	  padding:6px;
-	  border:1px solid var(--border);
-	  border-radius: 14px;
-	  background: rgba(0,0,0,.12);
-	}
-	.tabs .tabBtn{
-	text-decoration:none;
-	}
-
-	.tabBtn{
-	  appearance:none;
-	  border:1px solid transparent;
-	  background: transparent;
-	  color: var(--muted);
-	  padding:8px 12px;
-	  border-radius: 12px;
-	  cursor:pointer;
-	  font-weight: 800;
-	  font-size: 12px;
-	  letter-spacing: .2px;
-	  display:flex;
-	  align-items:center;
-	  gap:8px;
-	  white-space:nowrap;
-	}
-
-	.tabBtn:hover{
-	  border-color: rgba(255,255,255,.16);
-	  color: var(--text);
-	}
-
-	.tabBtn.active{
-	  color: var(--text);
-	  border-color: rgba(255,255,255,.18);
-	  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
-	}
-
-	.tabDot{
-	  width:8px;
-	  height:8px;
-	  border-radius: 50%;
-	  background: rgba(231,237,247,.35);
-	}
-
-	.tabBtn.active .tabDot{
-	  background: var(--good);
-	  box-shadow: 0 0 0 3px rgba(61,220,151,.12);
-	}
-
-	/* Page containers */
-	.page{
-	  display:none;
-	}
-	.page.active{
-	  display:block;
-	}
-
-    /* Horizontal scroll + conditional fade edges */
-
-    .hScroll{
-      overflow-x:auto;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-
-    /* Make sure items don't shrink weirdly inside scroll rows */
-    .hScroll > *{
-      flex: 0 0 auto;
-    }
-
-    /* Table wrapper behavior */
-    .tableScroll{
-      overflow-x:auto;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-    .tableScroll table{
-      min-width: 640px;
-    }
-
-    /* Fades: only visible when .isScrollable is present.
-       Left fade hidden when atStart, right fade hidden when atEnd. */
-    .fadeScroll::before,
-    .fadeScroll::after{
-      content:"";
-      position:absolute;
-      top:0;
-      bottom:0;
-      width:26px;
-      pointer-events:none;
-      opacity:0;
-      transition: opacity 160ms ease;
-    }
-    .fadeScroll::before{
-      left:0;
-      background: linear-gradient(90deg, rgba(11,15,23,.98), rgba(11,15,23,0));
-    }
-    .fadeScroll::after{
-      right:0;
-      background: linear-gradient(270deg, rgba(11,15,23,.98), rgba(11,15,23,0));
-    }
-
-    .fadeScroll.isScrollable::before,
-    .fadeScroll.isScrollable::after{
-      opacity:1;
-    }
-    .fadeScroll.isScrollable.atStart::before{ opacity:0; }
-    .fadeScroll.isScrollable.atEnd::after{ opacity:0; }
-
-    /* Slight padding so fades don't cover content edges too harshly */
-    .fadeScroll{
-      padding-left: 6px;
-      padding-right: 6px;
-      margin-left: -6px;
-      margin-right: -6px;
-    }
-
-    /* Mobile: prefer swipe-scroll instead of wrapping for toolbar + platform row */
-    @media (max-width: 560px){
-      .toolbar{
-        flex-wrap: nowrap;
-        justify-content:flex-start;
-      }
-      .platformLinks{
-        flex-wrap: nowrap;
-      }
-    }
-  </style> -->
 </head>
+
 <body>
   <div class="wrap">
     <header>
@@ -476,12 +78,6 @@
     </div>
 
 	<div class="footer">
-	  <!-- Credits: -->
-	  <!-- Platform row: scrolls on narrow screens + fades only when overflow exists -->
-	  <span class="platformLinks hScroll fadeScroll" id="platformLinks"></span>
-	</div>
-
-	<div class="footer">
 	  <code class="inline" id="versionCode">v—</code>
 	</div>
 	
@@ -532,19 +128,6 @@ const timers = [
 // Local TZ name (display only)
 const LOCAL_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || "Local";
 
-/**
- * Platform links:
- *  - label is display text
- *  - url is target link
- *  - icon is optional override (local file path recommended for consistency)
- */
-const platformLinks = [
-  { label: "GitHub", url: "https://github.com/WoahItsJeebus" },
-  { label: "Roblox", url: "https://www.roblox.com/users/3817884/profile" },
-  // { label: "Site", url: "https://example.com" },
-  // { label: "Custom", url: "https://example.com", icon: "icons/custom.png" },
-];
-
 // ---- DOM refs
 const dailyBody    = document.getElementById("dailyBody");
 const weeklyBody   = document.getElementById("weeklyBody");
@@ -589,93 +172,6 @@ function urgencyDot(dotEl, minRemaining){
   dotEl.classList.remove("warn","bad");
   if (minRemaining <= 300) dotEl.classList.add("bad");        // <= 5 min
   else if (minRemaining <= 3600) dotEl.classList.add("warn"); // <= 1 hour
-}
-
-/**
- * Platform link rendering (favicon by default)
- */
-
-function domainFromUrl(u){
-  try { return new URL(u).hostname.replace(/^www\./, ""); }
-  catch { return ""; }
-}
-
-function faviconFor(url){
-  const dom = domainFromUrl(url);
-  if (!dom) return "";
-  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(dom)}&sz=64`;
-}
-
-function renderPlatformLinks(){
-  const host = document.getElementById("platformLinks");
-  if (!host) return;
-
-  host.textContent = "";
-
-  for (const item of platformLinks){
-    if (!item || !item.url) continue;
-
-    const a = document.createElement("a");
-    a.className = "platformLink";
-    a.href = item.url;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-
-    const img = document.createElement("img");
-    img.className = "platformIcon";
-    img.alt = "";
-    img.src = item.icon || faviconFor(item.url);
-
-    const span = document.createElement("span");
-    span.textContent = item.label || domainFromUrl(item.url) || item.url;
-
-    a.appendChild(img);
-    a.appendChild(span);
-    host.appendChild(a);
-  }
-}
-
-/**
- * Scroll fade logic:
- * Adds/removes classes based on overflow and scroll position.
- */
-
-function updateFadeState(el){
-  const max = el.scrollWidth - el.clientWidth;
-
-  if (max <= 1){
-    el.classList.remove("isScrollable", "atStart", "atEnd");
-    return;
-  }
-
-  el.classList.add("isScrollable");
-
-  if (el.scrollLeft <= 1) el.classList.add("atStart");
-  else el.classList.remove("atStart");
-
-  if (el.scrollLeft >= max - 1) el.classList.add("atEnd");
-  else el.classList.remove("atEnd");
-}
-
-function attachFadeScroll(el){
-  if (!el) return;
-  updateFadeState(el);
-
-  el.addEventListener("scroll", () => updateFadeState(el), { passive:true });
-
-  if ("ResizeObserver" in window){
-    const ro = new ResizeObserver(() => updateFadeState(el));
-    ro.observe(el);
-  } else {
-    window.addEventListener("resize", () => updateFadeState(el));
-  }
-}
-
-function initScrollFades(){
-  attachFadeScroll(document.getElementById("dailyScroll"));
-  attachFadeScroll(document.getElementById("weeklyScroll"));
-  attachFadeScroll(document.getElementById("toolbarScroll"));
-  attachFadeScroll(document.getElementById("platformLinks"));
 }
 
 /**
@@ -844,12 +340,6 @@ function render(){
   if (minWeekly === Infinity) minWeekly = 999999999;
   urgencyDot(dailyDot, minDaily);
   urgencyDot(weeklyDot, minWeekly);
-
-  // Update fade states after content changes
-  updateFadeState(document.getElementById("dailyScroll"));
-  updateFadeState(document.getElementById("weeklyScroll"));
-  updateFadeState(document.getElementById("toolbarScroll"));
-  updateFadeState(document.getElementById("platformLinks"));
 }
 
 /**
@@ -857,11 +347,19 @@ function render(){
  */
 versionCode.textContent = `v${APP_VERSION}`;
 
-renderPlatformLinks();
 initScrollFades();
 
 render();
 setInterval(render, 1000);
 </script>
+
+<script type="module">
+  import { attachFadeScrollByIds, autoMarkActiveTab } from "./assets/site.js";
+
+  attachFadeScrollByIds(["dailyScroll", "weeklyScroll", "toolbarScroll"]);
+  autoMarkActiveTab();
+</script>
+
+
 </body>
 </html>

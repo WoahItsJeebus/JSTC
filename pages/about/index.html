@@ -1,9 +1,68 @@
-<link rel="stylesheet" href="../../assets/site.css">
-<link rel="icon" href="../../favicon.ico" sizes="any">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Skate. Reset Timers — About</title>
 
-<div class="tabsBar">
-  <nav class="tabs">
-    <a class="tabBtn" href="../../"><span class="tabDot"></span> Timers</a>
-    <a class="tabBtn active" href="./"><span class="tabDot"></span> About</a>
-  </nav>
-</div>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <link rel="icon" href="../../favicon.ico" sizes="any">
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>About</h1>
+        <div class="sub">
+          Credits, links, and other info for this tiny timers site.
+        </div>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="head">
+        <div class="title"><span class="statusDot"></span>Credits & Platforms</div>
+        <div class="tag">LINKS</div>
+      </div>
+
+      <div style="padding:14px;">
+        <div class="footer" style="margin-top:0;">
+          <span class="platformLinks hScroll fadeScroll" id="platformLinks"></span>
+        </div>
+
+        <!-- Optional extra footer text
+        <div class="footer">
+          Join
+          <a class="inlineLink" href="https://discord.gg/w8QdNsYmbr" target="_blank" rel="noopener noreferrer">
+            discord.gg/w8QdNsYmbr
+          </a>
+          to stay up-to-date on my tools and resources!
+        </div>
+        -->
+      </div>
+    </section>
+
+    <div class="tabsBar">
+      <nav class="tabs">
+        <a class="tabBtn" href="../../"><span class="tabDot"></span> Timers</a>
+        <a class="tabBtn active" href="./"><span class="tabDot"></span> About</a>
+      </nav>
+    </div>
+  </div>
+
+	<script type="module">
+		import { renderPlatformLinks, attachFadeScroll, autoMarkActiveTab } from "../../assets/site.js";
+
+		const platformLinks = [
+			{ label: "GitHub", url: "https://github.com/WoahItsJeebus" },
+			{ label: "Roblox", url: "https://www.roblox.com/users/3817884/profile" },
+		];
+
+		renderPlatformLinks(platformLinks, "platformLinks");
+		attachFadeScroll(document.getElementById("platformLinks"));
+		autoMarkActiveTab();
+	</script>
+
+</body>
+</html>
