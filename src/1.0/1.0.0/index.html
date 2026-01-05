@@ -4,10 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Skate. Reset Timers (Central-time anchored)</title>
-
-  <!-- Favicon (put favicon.ico in the same folder as index.html) -->
-  <link rel="icon" href="favicon.ico" sizes="any">
-
+  <link rel="icon" href="skate_favicon.ico" sizes="any">
   <style>
     :root{
       --bg:#0b0f17;
@@ -34,7 +31,7 @@
       justify-content:center;
       padding:24px;
     }
-    .wrap{ width:min(1280px, 100%); }
+    .wrap{ width:min(1040px, 100%); }
     header{
       display:flex;
       flex-wrap:wrap;
@@ -45,15 +42,7 @@
     }
     h1{ font-size:20px; margin:0; letter-spacing:.2px; }
     .sub{ color:var(--muted); font-size:13px; margin-top:6px; line-height:1.35; }
-
-    .toolbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
-
+    .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
     .pill{
       font-family:var(--mono);
       font-size:12px;
@@ -74,7 +63,6 @@
       cursor:pointer;
       font-weight:600;
       font-size:13px;
-      white-space:nowrap;
     }
     button:hover{ border-color:rgba(255,255,255,.16); }
     button:active{ transform:translateY(1px); }
@@ -117,9 +105,7 @@
       border:1px solid var(--border);
       color:var(--muted);
       font-family:var(--mono);
-      white-space:nowrap;
     }
-
     table{ width:100%; border-collapse:collapse; }
     thead th{
       text-align:left;
@@ -129,7 +115,6 @@
       padding:10px 14px;
       border-bottom:1px solid var(--border);
       background: rgba(0,0,0,.10);
-      white-space:nowrap;
     }
     tbody td{
       padding:12px 14px;
@@ -140,7 +125,7 @@
     tbody tr:last-child td{ border-bottom:none; }
     .mono{ font-family:var(--mono); }
     .muted{ color:var(--muted); }
-    .right{ text-align:left; }
+    .right{ text-align:right; }
 
     .statusDot{
       width:10px; height:10px; border-radius:50%;
@@ -171,137 +156,6 @@
       border:1px solid var(--border);
       background:rgba(0,0,0,.18);
       color:var(--text);
-      white-space:nowrap;
-    }
-
-    a.inlineLink{
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,.18);
-      color: var(--text);
-      text-decoration: none;
-      display: inline-block;
-      white-space:nowrap;
-    }
-    a.inlineLink:hover{
-      border-color: rgba(255,255,255,.16);
-      text-decoration: underline;
-    }
-    a.inlineLink:active{
-      transform: translateY(1px);
-    }
-
-    .platformLinks{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-left:8px;
-      align-items:center;
-    }
-    a.platformLink{
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 4px 8px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,.18);
-      color: var(--text);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      white-space:nowrap;
-      flex: 0 0 auto;
-    }
-    a.platformLink:hover{
-      border-color: rgba(255,255,255,.16);
-      text-decoration: underline;
-    }
-    a.platformLink:active{
-      transform: translateY(1px);
-    }
-    .platformIcon{
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-      flex: 0 0 auto;
-      image-rendering: auto;
-    }
-
-    /* ============================================================
-       Horizontal scroll + conditional fade edges
-       ============================================================ */
-
-    .hScroll{
-      overflow-x:auto;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-
-    /* Make sure items don't shrink weirdly inside scroll rows */
-    .hScroll > *{
-      flex: 0 0 auto;
-    }
-
-    /* Table wrapper behavior */
-    .tableScroll{
-      overflow-x:auto;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-    .tableScroll table{
-      min-width: 640px;
-    }
-
-    /* Fades: only visible when .isScrollable is present.
-       Left fade hidden when atStart, right fade hidden when atEnd. */
-    .fadeScroll::before,
-    .fadeScroll::after{
-      content:"";
-      position:absolute;
-      top:0;
-      bottom:0;
-      width:26px;
-      pointer-events:none;
-      opacity:0;
-      transition: opacity 160ms ease;
-    }
-    .fadeScroll::before{
-      left:0;
-      background: linear-gradient(90deg, rgba(11,15,23,.98), rgba(11,15,23,0));
-    }
-    .fadeScroll::after{
-      right:0;
-      background: linear-gradient(270deg, rgba(11,15,23,.98), rgba(11,15,23,0));
-    }
-
-    .fadeScroll.isScrollable::before,
-    .fadeScroll.isScrollable::after{
-      opacity:1;
-    }
-    .fadeScroll.isScrollable.atStart::before{ opacity:0; }
-    .fadeScroll.isScrollable.atEnd::after{ opacity:0; }
-
-    /* Slight padding so fades don't cover content edges too harshly */
-    .fadeScroll{
-      padding-left: 6px;
-      padding-right: 6px;
-      margin-left: -6px;
-      margin-right: -6px;
-    }
-
-    /* Mobile: prefer swipe-scroll instead of wrapping for toolbar + platform row */
-    @media (max-width: 560px){
-      .toolbar{
-        flex-wrap: nowrap;
-        justify-content:flex-start;
-      }
-      .platformLinks{
-        flex-wrap: nowrap;
-      }
     }
   </style>
 </head>
@@ -311,17 +165,15 @@
       <div>
         <h1>Skate. Reset Timers</h1>
         <div class="sub">
-          Reset rules are defined in <code class="inline">America/Chicago</code>:
+          Reset rules are anchored to <code class="inline">America/Chicago</code>:
           daily at <code class="inline">12:00</code>, weekly on <code class="inline">Monday 12:00</code>.
-          The “Next (Local)” column shows the device timezone; the “Next (UTC)” column is the anchor reference.
+          This stays correct through CST/CDT automatically.
         </div>
       </div>
-
-      <!-- Toolbar: scrolls on narrow screens + fades only when overflow exists -->
-      <div class="toolbar hScroll fadeScroll" id="toolbarScroll">
+      <div class="toolbar">
         <div class="pill" id="nowPill">Now: —</div>
         <div class="pill" id="localTzPill">Local TZ: —</div>
-        <div class="pill" id="resetTzPill">Reset TZ: —</div>
+        <div class="pill" id="anchorTzPill">Anchor TZ: —</div>
         <button id="refreshBtn" type="button">Refresh</button>
       </div>
     </header>
@@ -332,21 +184,17 @@
           <div class="title"><span class="statusDot" id="dailyDot"></span>Daily</div>
           <div class="tag">COUNTDOWN</div>
         </div>
-
-        <!-- Table scroll + fades only when overflow exists -->
-        <div class="tableScroll fadeScroll" id="dailyScroll">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:28%">Timer</th>
-                <th style="width:24%">Next (Local)</th>
-                <th style="width:24%">Next (UTC)</th>
-                <th class="right" style="width:24%">Remaining</th>
-              </tr>
-            </thead>
-            <tbody id="dailyBody"></tbody>
-          </table>
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:28%">Timer</th>
+              <th style="width:24%">Next (Central)</th>
+              <th style="width:24%">Next (UTC)</th>
+              <th class="right" style="width:24%">Remaining</th>
+            </tr>
+          </thead>
+          <tbody id="dailyBody"></tbody>
+        </table>
       </section>
 
       <section class="card">
@@ -354,45 +202,24 @@
           <div class="title"><span class="statusDot" id="weeklyDot"></span>Weekly</div>
           <div class="tag">COUNTDOWN</div>
         </div>
-
-        <!-- Table scroll + fades only when overflow exists -->
-        <div class="tableScroll fadeScroll" id="weeklyScroll">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:28%">Timer</th>
-                <th style="width:24%">Next (Local)</th>
-                <th style="width:24%">Next (UTC)</th>
-                <th class="right" style="width:24%">Remaining</th>
-              </tr>
-            </thead>
-            <tbody id="weeklyBody"></tbody>
-          </table>
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:28%">Timer</th>
+              <th style="width:24%">Next (Central)</th>
+              <th style="width:24%">Next (UTC)</th>
+              <th class="right" style="width:24%">Remaining</th>
+            </tr>
+          </thead>
+          <tbody id="weeklyBody"></tbody>
+        </table>
       </section>
     </div>
 
-	<div class="footer">
-	  <!-- Credits: -->
-	  <!-- Platform row: scrolls on narrow screens + fades only when overflow exists -->
-	  <span class="platformLinks hScroll fadeScroll" id="platformLinks"></span>
-	</div>
-	
-	<div class="footer">
-	  <code class="inline" id="versionCode">v—</code>
-	</div>
-	
-
-
-    <!--
-    <div class="footer">
-      Join
-      <a class="inlineLink" href="https://discord.gg/w8QdNsYmbr" target="_blank" rel="noopener noreferrer">
-        discord.gg/w8QdNsYmbr
-      </a>
-      to stay up-to-date on my tools and resources!
-    </div>
-    -->
+    <!-- <div class="footer">
+      Edit only the config in the <code class="inline">timers</code> array below.
+      Weekly <code class="inline">day</code>: <code class="inline">0</code>=Sun … <code class="inline">6</code>=Sat.
+    </div> -->
   </div>
 
 <script>
@@ -400,40 +227,19 @@
  * ============================================================
  * CONFIG
  * ============================================================
+ * Anchor timezone for the reset definition:
+ *   "America/Chicago" means noon Central, with DST handled.
  */
-
-const APP_VERSION = "1.1.0";
-
-/**
- * Reset definition timezone:
- *   "America/Chicago" means noon Central, with DST handled correctly.
- */
-const RESET_TZ = "America/Chicago";
+const ANCHOR_TZ = "America/Chicago";
 
 /**
  * Timers:
- *  - time is wall-clock time in RESET_TZ
- *  - day: weekly only, 0..6 where 0=Sunday, 1=Monday, ... 6=Saturday
+ *  - time is wall-clock time in ANCHOR_TZ
+ *  - day: weekly only, 0..6 where 1=Monday in JS is actually 1, yes (0=Sunday)
  */
 const timers = [
   { name: "Daily Challenges Reset",  kind: "daily",  time: "12:00:00", enabled: true },
   { name: "Weekly Challenges Reset", kind: "weekly", day: 1, time: "12:00:00", enabled: true }, // Monday
-];
-
-// Local TZ name (display only)
-const LOCAL_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || "Local";
-
-/**
- * Platform links:
- *  - label is display text
- *  - url is target link
- *  - icon is optional override (local file path recommended for consistency)
- */
-const platformLinks = [
-  { label: "GitHub", url: "https://github.com/WoahItsJeebus" },
-  { label: "Roblox", url: "https://www.roblox.com/users/3817884/profile" },
-  // { label: "Site", url: "https://example.com" },
-  // { label: "Custom", url: "https://example.com", icon: "icons/custom.png" },
 ];
 
 // ---- DOM refs
@@ -441,11 +247,9 @@ const dailyBody    = document.getElementById("dailyBody");
 const weeklyBody   = document.getElementById("weeklyBody");
 const nowPill      = document.getElementById("nowPill");
 const localTzPill  = document.getElementById("localTzPill");
-const resetTzPill  = document.getElementById("resetTzPill");
+const anchorTzPill = document.getElementById("anchorTzPill");
 const dailyDot     = document.getElementById("dailyDot");
 const weeklyDot    = document.getElementById("weeklyDot");
-const versionCode  = document.getElementById("versionCode");
-
 document.getElementById("refreshBtn").addEventListener("click", () => render(true));
 
 function pad2(n){ return String(n).padStart(2, "0"); }
@@ -483,96 +287,9 @@ function urgencyDot(dotEl, minRemaining){
 }
 
 /**
- * Platform link rendering (favicon by default)
+ * Get wall-clock parts for a UTC Date in a given IANA timeZone.
+ * Returns numbers: year, month(1-12), day(1-31), hour, minute, second, weekday(0-6)
  */
-
-function domainFromUrl(u){
-  try { return new URL(u).hostname.replace(/^www\./, ""); }
-  catch { return ""; }
-}
-
-function faviconFor(url){
-  const dom = domainFromUrl(url);
-  if (!dom) return "";
-  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(dom)}&sz=64`;
-}
-
-function renderPlatformLinks(){
-  const host = document.getElementById("platformLinks");
-  if (!host) return;
-
-  host.textContent = "";
-
-  for (const item of platformLinks){
-    if (!item || !item.url) continue;
-
-    const a = document.createElement("a");
-    a.className = "platformLink";
-    a.href = item.url;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-
-    const img = document.createElement("img");
-    img.className = "platformIcon";
-    img.alt = "";
-    img.src = item.icon || faviconFor(item.url);
-
-    const span = document.createElement("span");
-    span.textContent = item.label || domainFromUrl(item.url) || item.url;
-
-    a.appendChild(img);
-    a.appendChild(span);
-    host.appendChild(a);
-  }
-}
-
-/**
- * Scroll fade logic:
- * Adds/removes classes based on overflow and scroll position.
- */
-
-function updateFadeState(el){
-  const max = el.scrollWidth - el.clientWidth;
-
-  if (max <= 1){
-    el.classList.remove("isScrollable", "atStart", "atEnd");
-    return;
-  }
-
-  el.classList.add("isScrollable");
-
-  if (el.scrollLeft <= 1) el.classList.add("atStart");
-  else el.classList.remove("atStart");
-
-  if (el.scrollLeft >= max - 1) el.classList.add("atEnd");
-  else el.classList.remove("atEnd");
-}
-
-function attachFadeScroll(el){
-  if (!el) return;
-  updateFadeState(el);
-
-  el.addEventListener("scroll", () => updateFadeState(el), { passive:true });
-
-  if ("ResizeObserver" in window){
-    const ro = new ResizeObserver(() => updateFadeState(el));
-    ro.observe(el);
-  } else {
-    window.addEventListener("resize", () => updateFadeState(el));
-  }
-}
-
-function initScrollFades(){
-  attachFadeScroll(document.getElementById("dailyScroll"));
-  attachFadeScroll(document.getElementById("weeklyScroll"));
-  attachFadeScroll(document.getElementById("toolbarScroll"));
-  attachFadeScroll(document.getElementById("platformLinks"));
-}
-
-/**
- * Timezone math helpers
- */
-
 function getZonedParts(dateUtc, timeZone){
   const dtf = new Intl.DateTimeFormat("en-US", {
     timeZone,
@@ -598,26 +315,35 @@ function getZonedParts(dateUtc, timeZone){
   };
 }
 
+/**
+ * Compute timezone offset (minutes) for a given UTC Date as seen in timeZone.
+ * offsetMinutes = localTime - utcTime (so Chicago winter ≈ -360)
+ */
 function tzOffsetMinutes(dateUtc, timeZone){
   const z = getZonedParts(dateUtc, timeZone);
   const asIfUtc = Date.UTC(z.year, z.month-1, z.day, z.hour, z.minute, z.second);
   return (asIfUtc - dateUtc.getTime()) / 60000;
 }
 
+/**
+ * Convert a wall time (y,m,d,h,mi,s) in timeZone into a real UTC Date.
+ * Uses a 2-pass offset solve to handle DST boundaries.
+ */
 function wallToUtcDate(y, m, d, h, mi, s, timeZone){
   const naiveUtcMs = Date.UTC(y, m-1, d, h, mi, s);
+  // pass 1
   let guess = new Date(naiveUtcMs);
   let off1 = tzOffsetMinutes(guess, timeZone);
   let utcMs1 = naiveUtcMs - off1 * 60000;
-
+  // pass 2
   guess = new Date(utcMs1);
   let off2 = tzOffsetMinutes(guess, timeZone);
   let utcMs2 = naiveUtcMs - off2 * 60000;
-
   return new Date(utcMs2);
 }
 
 function addDaysToYMD(y, m, d, days){
+  // calendar-safe date rolling using UTC midnight
   const base = new Date(Date.UTC(y, m-1, d, 0, 0, 0));
   base.setUTCDate(base.getUTCDate() + days);
   return { y: base.getUTCFullYear(), m: base.getUTCMonth()+1, d: base.getUTCDate() };
@@ -627,19 +353,13 @@ function fmtInTZ(dateUtc, timeZone){
   const z = getZonedParts(dateUtc, timeZone);
   return `${z.year}-${pad2(z.month)}-${pad2(z.day)} ${pad2(z.hour)}:${pad2(z.minute)}:${pad2(z.second)}`;
 }
-
-function fmtLocal(dateUtc){
-  if (LOCAL_TZ && LOCAL_TZ !== "Local") return fmtInTZ(dateUtc, LOCAL_TZ);
-  return `${dateUtc.getFullYear()}-${pad2(dateUtc.getMonth()+1)}-${pad2(dateUtc.getDate())} `
-       + `${pad2(dateUtc.getHours())}:${pad2(dateUtc.getMinutes())}:${pad2(dateUtc.getSeconds())}`;
-}
-
 function fmtUtc(dateUtc){
   return `${dateUtc.getUTCFullYear()}-${pad2(dateUtc.getUTCMonth()+1)}-${pad2(dateUtc.getUTCDate())} `
        + `${pad2(dateUtc.getUTCHours())}:${pad2(dateUtc.getUTCMinutes())}:${pad2(dateUtc.getUTCSeconds())}`;
 }
 
 function compareWallTimeToTarget(nowZ, tm){
+  // returns -1 if now < target, 0 if equal, +1 if now > target
   if (nowZ.hour !== tm.h) return nowZ.hour < tm.h ? -1 : 1;
   if (nowZ.minute !== tm.m) return nowZ.minute < tm.m ? -1 : 1;
   if (nowZ.second !== tm.sec) return nowZ.second < tm.sec ? -1 : 1;
@@ -647,34 +367,35 @@ function compareWallTimeToTarget(nowZ, tm){
 }
 
 function nextDailyAnchored(nowUtc, timeObj){
-  const nowZ = getZonedParts(nowUtc, RESET_TZ);
+  const nowZ = getZonedParts(nowUtc, ANCHOR_TZ);
   let targetY = nowZ.year, targetM = nowZ.month, targetD = nowZ.day;
 
   if (compareWallTimeToTarget(nowZ, timeObj) >= 0){
+    // already hit/passed today's noon in Central -> tomorrow
     const nxt = addDaysToYMD(targetY, targetM, targetD, 1);
     targetY = nxt.y; targetM = nxt.m; targetD = nxt.d;
   }
 
-  return wallToUtcDate(targetY, targetM, targetD, timeObj.h, timeObj.m, timeObj.sec, RESET_TZ);
+  return wallToUtcDate(targetY, targetM, targetD, timeObj.h, timeObj.m, timeObj.sec, ANCHOR_TZ);
 }
 
 function nextWeeklyAnchored(nowUtc, targetWeekday, timeObj){
-  const nowZ = getZonedParts(nowUtc, RESET_TZ);
+  const nowZ = getZonedParts(nowUtc, ANCHOR_TZ);
   let daysUntil = (targetWeekday - nowZ.weekday + 7) % 7;
 
   if (daysUntil === 0 && compareWallTimeToTarget(nowZ, timeObj) >= 0){
-    daysUntil = 7;
+    daysUntil = 7; // same weekday but already passed the target time -> next week
   }
 
   const tgt = addDaysToYMD(nowZ.year, nowZ.month, nowZ.day, daysUntil);
-  return wallToUtcDate(tgt.y, tgt.m, tgt.d, timeObj.h, timeObj.m, timeObj.sec, RESET_TZ);
+  return wallToUtcDate(tgt.y, tgt.m, tgt.d, timeObj.h, timeObj.m, timeObj.sec, ANCHOR_TZ);
 }
 
-function addRow(kind, name, nextLocal, nextUtc, remainStr){
+function addRow(kind, name, nextCentral, nextUtc, remainStr){
   const tr = document.createElement("tr");
   tr.innerHTML = `
     <td>${escapeHtml(name)}</td>
-    <td class="mono muted">${escapeHtml(nextLocal)}</td>
+    <td class="mono muted">${escapeHtml(nextCentral)}</td>
     <td class="mono muted">${escapeHtml(nextUtc)}</td>
     <td class="mono right">${escapeHtml(remainStr)}</td>
   `;
@@ -684,10 +405,9 @@ function addRow(kind, name, nextLocal, nextUtc, remainStr){
 
 function render(){
   const nowUtc = new Date();
-
   nowPill.textContent = `Now: ${nowUtc.toLocaleString(undefined, { hour12:false })}`;
-  localTzPill.textContent = `Local TZ: ${LOCAL_TZ}`;
-  resetTzPill.textContent = `Reset TZ: ${RESET_TZ}`;
+  localTzPill.textContent = `Local TZ: ${Intl.DateTimeFormat().resolvedOptions().timeZone || "Local"}`;
+  anchorTzPill.textContent = `Anchor TZ: ${ANCHOR_TZ}`;
 
   dailyBody.textContent = "";
   weeklyBody.textContent = "";
@@ -725,32 +445,19 @@ function render(){
     if (kind === "daily") minDaily = Math.min(minDaily, remaining);
     if (kind === "weekly") minWeekly = Math.min(minWeekly, remaining);
 
-    const nextLocalStr = fmtLocal(nextUtcDate);
-    const nextUtcStr   = fmtUtc(nextUtcDate);
+    const nextCentralStr = fmtInTZ(nextUtcDate, ANCHOR_TZ);
+    const nextUtcStr = fmtUtc(nextUtcDate);
 
-    addRow(t.kind, t.name, nextLocalStr, nextUtcStr, formatDuration(remaining));
+    addRow(t.kind, t.name, nextCentralStr, nextUtcStr, formatDuration(remaining));
   }
 
   if (minDaily === Infinity) minDaily = 999999999;
   if (minWeekly === Infinity) minWeekly = 999999999;
   urgencyDot(dailyDot, minDaily);
   urgencyDot(weeklyDot, minWeekly);
-
-  // Update fade states after content changes
-  updateFadeState(document.getElementById("dailyScroll"));
-  updateFadeState(document.getElementById("weeklyScroll"));
-  updateFadeState(document.getElementById("toolbarScroll"));
-  updateFadeState(document.getElementById("platformLinks"));
 }
 
-/**
- * Startup
- */
-versionCode.textContent = `v${APP_VERSION}`;
-
-renderPlatformLinks();
-initScrollFades();
-
+// start + tick
 render();
 setInterval(render, 1000);
 </script>
