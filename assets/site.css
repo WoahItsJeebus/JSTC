@@ -310,12 +310,56 @@ a.platformLink:active{
 .fadeScroll.isScrollable.atEnd::after{ opacity:0; }
 
 /* Small padding so fades don't harshly cover edges */
-.fadeScroll{
+/* .fadeScroll{
   padding-left: 6px;
   padding-right: 6px;
   margin-left: -6px;
   margin-right: -6px;
+} */
+
+/* Inner scroller stays purely a scroller */
+.fadeWrap > .tableScroll,
+.fadeWrap > .hScroll{
+  position: relative;
 }
+
+/* Fades must live on a NON-scrolling wrapper */
+.fadeWrap{
+  position: relative;
+}
+
+/* Fades */
+.fadeWrap.fadeScroll::before,
+.fadeWrap.fadeScroll::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:26px;
+  pointer-events:none;
+  opacity:0;
+  transition: opacity 160ms ease;
+  z-index: 3;
+}
+
+.fadeWrap.fadeScroll::before{
+  left:0;
+  background: linear-gradient(90deg, rgba(11,15,23,.98), rgba(11,15,23,0));
+}
+
+.fadeWrap.fadeScroll::after{
+  right:0;
+  background: linear-gradient(270deg, rgba(11,15,23,.98), rgba(11,15,23,0));
+}
+
+/* Only show when overflow exists */
+.fadeWrap.fadeScroll.isScrollable::before,
+.fadeWrap.fadeScroll.isScrollable::after{
+  opacity:1;
+}
+
+.fadeWrap.fadeScroll.isScrollable.atStart::before{ opacity:0; }
+.fadeWrap.fadeScroll.isScrollable.atEnd::after{ opacity:0; }
 
 /* Mobile: prefer swipe-scroll instead of wrapping for toolbar + platform row */
 @media (max-width: 560px){

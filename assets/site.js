@@ -50,6 +50,39 @@ export function attachFadeScrollByIds(ids){
   }
 }
 
+export function attachFadeToScroller(scrollerEl, fadeEl){
+  if (!scrollerEl || !fadeEl) return;
+
+  function sync(){
+    const max = scrollerEl.scrollWidth - scrollerEl.clientWidth;
+
+    if (max <= 1){
+      fadeEl.classList.remove("isScrollable", "atStart", "atEnd");
+      return;
+    }
+
+    fadeEl.classList.add("isScrollable");
+
+    if (scrollerEl.scrollLeft <= 1) fadeEl.classList.add("atStart");
+    else fadeEl.classList.remove("atStart");
+
+    if (scrollerEl.scrollLeft >= max - 1) fadeEl.classList.add("atEnd");
+    else fadeEl.classList.remove("atEnd");
+  }
+
+  sync();
+  scrollerEl.addEventListener("scroll", sync, { passive:true });
+
+  if ("ResizeObserver" in window){
+    const ro = new ResizeObserver(sync);
+    ro.observe(scrollerEl);
+  } else {
+    window.addEventListener("resize", sync);
+  }
+
+  return sync; // lets you manually resync after render()
+}
+
 /**
  * ===== Platform link rendering =====
  * Renders pill links into #platformLinks (if present).
