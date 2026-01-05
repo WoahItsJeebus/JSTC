@@ -3,5 +3,6 @@
 <font color="#00ffbfff" face="Consolas">JSTC is a web-based set of timers for tracking daily and weekly challenge resets for EA's Skate.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/8ccc15fc-0d1c-4e51-823e-be9829d34b49">
+  <img src="https://github.com/user-attachments/assets/ae671d84-de4a-4196-994e-f636a40ea0d0"/>
+">
 </p>
