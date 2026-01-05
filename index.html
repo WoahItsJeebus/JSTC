@@ -12,24 +12,22 @@
 <body>
   <div class="wrap">
     <header>
-		<div>
-			<h1>Skate. Reset Timers</h1>
-			<div class="sub">
-				Reset rules are defined in <code class="inline">America/Chicago</code>:
-				daily at <code class="inline">12:00</code>, weekly on <code class="inline">Monday 12:00</code>.
-				The “Next (Local)” column shows the device timezone; the “Next (UTC)” column is the anchor reference.
-			</div>
-		</div>
+      <div>
+        <h1>Skate. Reset Timers</h1>
+        <div class="sub">
+          Reset rules are defined in <code class="inline">America/Chicago</code>:
+          daily at <code class="inline">12:00</code>, weekly on <code class="inline">Monday 12:00</code>.
+          The “Next (Local)” column shows the device timezone; the “Next (UTC)” column is the anchor reference.
+        </div>
+      </div>
 
       <!-- Toolbar: scrolls on narrow screens + fades only when overflow exists -->
-		<div class="fadeWrap fadeScroll" id="toolbarFade">
-			<div class="toolbar hScroll" id="toolbarScroll">
-				<div class="pill" id="nowPill">Now: —</div>
-				<div class="pill" id="localTzPill">Local TZ: —</div>
-				<div class="pill" id="resetTzPill">Reset TZ: —</div>
-				<button id="refreshBtn" type="button">Refresh</button>
-			</div>
-		</div>
+      <div class="toolbar hScroll fadeScroll" id="toolbarScroll">
+        <div class="pill" id="nowPill">Now: —</div>
+        <div class="pill" id="localTzPill">Local TZ: —</div>
+        <div class="pill" id="resetTzPill">Reset TZ: —</div>
+        <button id="refreshBtn" type="button">Refresh</button>
+      </div>
     </header>
 
     <div class="grid">
