@@ -2,7 +2,96 @@
    site.js — shared helpers for all pages
    ============================================================ */
 
-   /**
+/**
+ * 
+ * Orb Handler
+ * 
+*/
+
+export function startOrbBackground(opts = {}){
+  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  if (reduce) return;
+
+  const cfg = {
+    maxOrbs: 7,
+    spawnEveryMs: 1100,
+    sizeMin: 260,
+    sizeMax: 560,
+    durMinMs: 9000,
+    durMaxMs: 17000,
+    blurMin: 18,
+    blurMax: 30,
+    margin: 0.12, // allow off-screen spawns for nicer edges
+    colors: [
+      [122,162,255], // blue
+      [61,220,151],  // green
+      [170,120,255], // purple
+      [255,204,102], // warm
+    ],
+    ...opts,
+  };
+
+  let layer = document.querySelector(".bgOrbs");
+  if (!layer){
+    layer = document.createElement("div");
+    layer.className = "bgOrbs";
+    layer.setAttribute("aria-hidden", "true");
+    document.body.prepend(layer);
+  }
+
+  const rand = (a,b) => a + Math.random() * (b - a);
+  const randi = (a,b) => Math.floor(rand(a,b+1));
+  const pick = arr => arr[randi(0, arr.length - 1)];
+
+  function spawnOne(){
+    if (!layer) return;
+    if (layer.querySelectorAll(".bgOrb").length >= cfg.maxOrbs) return;
+
+    const orb = document.createElement("div");
+    orb.className = "bgOrb";
+
+    const size = randi(cfg.sizeMin, cfg.sizeMax);
+    const dur  = randi(cfg.durMinMs, cfg.durMaxMs);
+    const blur = randi(cfg.blurMin, cfg.blurMax);
+
+    const vw = window.innerWidth || 1000;
+    const vh = window.innerHeight || 800;
+
+    // place using percentages so it stays consistent on resize
+    const leftPct = rand(-cfg.margin, 1 + cfg.margin) * 100;
+    const topPct  = rand(-cfg.margin, 1 + cfg.margin) * 100;
+
+    // drift in px (small movement looks best)
+    const dx = randi(-40, 40);
+    const dy = randi(-35, 35);
+
+    const [r,g,b] = pick(cfg.colors);
+
+    orb.style.setProperty("--size", `${size}px`);
+    orb.style.setProperty("--dur", `${dur}ms`);
+    orb.style.setProperty("--blur", `${blur}px`);
+    orb.style.setProperty("--left", `${leftPct}%`);
+    orb.style.setProperty("--top", `${topPct}%`);
+    orb.style.setProperty("--dx", `${dx}px`);
+    orb.style.setProperty("--dy", `${dy}px`);
+    orb.style.setProperty("--rgb", `${r},${g},${b}`);
+
+    // tiny random delay so they don't “beat” together
+    orb.style.animationDelay = `${randi(0, 900)}ms`;
+
+    orb.addEventListener("animationend", () => {
+      orb.remove();
+    });
+
+    layer.appendChild(orb);
+  }
+
+  // Prime a few immediately, then keep topping up
+  for (let i = 0; i < Math.min(3, cfg.maxOrbs); i++) spawnOne();
+  setInterval(spawnOne, cfg.spawnEveryMs);
+}
+
+/**
  * ===== Fade scroll logic =====
  * Works with .fadeScroll + .isScrollable/.atStart/.atEnd CSS classes.
  */

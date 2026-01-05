@@ -52,7 +52,7 @@
   </div>
 
 	<script type="module">
-		import { renderPlatformLinks, attachFadeScroll, autoMarkActiveTab } from "../../assets/site.js";
+		import { renderPlatformLinks, attachFadeScroll, autoMarkActiveTab, startOrbBackground } from "../../assets/site.js";
 
 		const platformLinks = [
 			{ label: "GitHub", url: "https://github.com/WoahItsJeebus" },
@@ -61,6 +61,7 @@
 
 		renderPlatformLinks(platformLinks, "platformLinks");
 		attachFadeScroll(document.getElementById("platformLinks"));
+		startOrbBackground({ maxOrbs: 5, spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
 		autoMarkActiveTab();
 	</script>
 
