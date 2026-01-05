@@ -76,11 +76,10 @@ export function attachFadeToScroller(scrollerEl, fadeEl){
   if ("ResizeObserver" in window){
     const ro = new ResizeObserver(sync);
     ro.observe(scrollerEl);
+    ro.observe(fadeEl);
   } else {
     window.addEventListener("resize", sync);
   }
-
-  return sync; // lets you manually resync after render()
 }
 
 /**
