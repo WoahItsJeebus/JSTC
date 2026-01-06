@@ -385,11 +385,9 @@ a.platformLink:active{
   }
 }
 
-/* ============================================================
-   Themed scrollbars (since you chose this)
-   ============================================================ */
-
+/* Themed scrollbars
 /* WebKit: Chrome/Safari/Edge */
+
 .tableScroll::-webkit-scrollbar,
 .hScroll::-webkit-scrollbar{
   height: 10px;
@@ -488,4 +486,71 @@ a.platformLink:active{
 }
 .page.active{
   display:block;
+}
+
+/* ============================================================
+   Orb background layer (required for startOrbBackground())
+   ============================================================ */
+
+.bgOrbs{
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap{
+  position: relative;
+  z-index: 1;
+}
+
+/* Each orb reads variables set by JS:
+   --size, --dur, --blur, --left, --top, --dx, --dy, --rgb */
+.bgOrb{
+  position: absolute;
+  left: var(--left);
+  top: var(--top);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 999px;
+
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(var(--rgb), 0.55),
+    rgba(var(--rgb), 0.0) 62%
+  );
+
+  filter: blur(var(--blur));
+  opacity: 0;
+  mix-blend-mode: screen;
+
+  transform: translate3d(0,0,0) scale(0.65);
+  will-change: transform, opacity;
+
+  animation: orbLife var(--dur) ease-in-out forwards;
+}
+
+@keyframes orbLife{
+  /* Fade/grow in */
+  0%{
+    opacity: 0;
+    transform: translate3d(0,0,0) scale(0.6);
+  }
+  18%{
+    opacity: 0.85;
+    transform: translate3d(calc(var(--dx) * 0.25), calc(var(--dy) * 0.25), 0) scale(1.06);
+  }
+
+  /* Linger */
+  70%{
+    opacity: 0.72;
+    transform: translate3d(calc(var(--dx) * 0.85), calc(var(--dy) * 0.85), 0) scale(1.12);
+  }
+
+  /* Fade/shrink out */
+  100%{
+    opacity: 0;
+    transform: translate3d(var(--dx), var(--dy), 0) scale(0.72);
+  }
 }

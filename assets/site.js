@@ -8,43 +8,102 @@
  * 
 */
 
-export function startOrbBackground(opts = {}){
+let __orbBgStop = null;
+
+export function startOrbBackground(opts = {}) {
   const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-  if (reduce) return;
+  if (reduce) return { stop() {} };
+
+  // Idempotent: restart cleanly
+  if (typeof __orbBgStop === "function") __orbBgStop();
 
   const cfg = {
     maxOrbs: 7,
     spawnEveryMs: 1100,
     sizeMin: 260,
     sizeMax: 560,
-    durMinMs: 9000,
-    durMaxMs: 17000,
+    durMinMs: 5000,
+    durMaxMs: 12000,
     blurMin: 18,
     blurMax: 30,
-    margin: 0.12, // allow off-screen spawns for nicer edges
+    margin: 0.12,
+
+    // NEW: opacity option (see resolver below)
+    // examples:
+    // opacity: 0.22
+    // opacity: { min: 0.14, max: 0.28 }
+    // opacity: [0.14, 0.28]
+    opacity: { min: 0.14, max: 0.26 },
+
     colors: [
-      [147, 176, 245], // blue
-      [116, 232, 168],  // green
-      [178, 134, 252], // purple
-      [255, 217, 140], // warm
+      "#51b2f3",
+      "#39d4a1ff",
+      "#9b45e2ff",
     ],
     ...opts,
   };
 
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const randi = (a, b) => Math.floor(rand(a, b + 1));
+  const pick = (arr) => arr[randi(0, arr.length - 1)];
+
+  function ToRGBA(hex) {
+    if (typeof hex !== "string") throw new TypeError("hex must be a string");
+
+    let s = hex.trim();
+    if (s.startsWith("#")) s = s.slice(1);
+
+    // Expand #RGB/#RGBA -> #RRGGBB/#RRGGBBAA
+    if (s.length === 3 || s.length === 4) {
+      s = s.split("").map(ch => ch + ch).join("");
+    }
+
+    if (!/^[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(s)) {
+      throw new Error("Invalid hex color");
+    }
+
+    const rgb = s.slice(0, 6);
+    const aHex = s.length === 8 ? s.slice(6, 8) : null;
+
+    const n = parseInt(rgb, 16);
+    const r = (n >> 16) & 255;
+    const g = (n >> 8) & 255;
+    const b = n & 255;
+
+    const a = aHex ? parseInt(aHex, 16) / 255 : 1;
+    return [r, g, b, a];
+  }
+
+  function resolveOpacity(op) {
+    if (typeof op === "number") return clamp01(op);
+
+    if (Array.isArray(op) && op.length >= 2) {
+      return clamp01(rand(op[0], op[1]));
+    }
+
+    if (op && typeof op === "object") {
+      const min = typeof op.min === "number" ? op.min : 0.2;
+      const max = typeof op.max === "number" ? op.max : min;
+      return clamp01(rand(min, max));
+    }
+
+    return 0.2; // fallback
+  }
+
   let layer = document.querySelector(".bgOrbs");
-  if (!layer){
+  if (!layer) {
     layer = document.createElement("div");
     layer.className = "bgOrbs";
     layer.setAttribute("aria-hidden", "true");
     document.body.prepend(layer);
   }
 
-  const rand = (a,b) => a + Math.random() * (b - a);
-  const randi = (a,b) => Math.floor(rand(a,b+1));
-  const pick = arr => arr[randi(0, arr.length - 1)];
+  let intervalId = null;
+  let stopped = false;
 
-  function spawnOne(){
-    if (!layer) return;
+  function spawnOne() {
+    if (stopped || !layer) return;
     if (layer.querySelectorAll(".bgOrb").length >= cfg.maxOrbs) return;
 
     const orb = document.createElement("div");
@@ -54,18 +113,17 @@ export function startOrbBackground(opts = {}){
     const dur  = randi(cfg.durMinMs, cfg.durMaxMs);
     const blur = randi(cfg.blurMin, cfg.blurMax);
 
-    const vw = window.innerWidth || 1000;
-    const vh = window.innerHeight || 800;
-
-    // place using percentages so it stays consistent on resize
     const leftPct = rand(-cfg.margin, 1 + cfg.margin) * 100;
     const topPct  = rand(-cfg.margin, 1 + cfg.margin) * 100;
 
-    // drift in px (small movement looks best)
     const dx = randi(-40, 40);
     const dy = randi(-35, 35);
 
-    const [r,g,b] = pick(cfg.colors);
+    const [r, g, b, aHex] = ToRGBA(pick(cfg.colors));
+
+    // NEW: opacity resolved from cfg, multiplied by any hex alpha
+    const baseOpacity = resolveOpacity(cfg.opacity);
+    const finalOpacity = clamp01(baseOpacity * aHex);
 
     orb.style.setProperty("--size", `${size}px`);
     orb.style.setProperty("--dur", `${dur}ms`);
@@ -75,20 +133,37 @@ export function startOrbBackground(opts = {}){
     orb.style.setProperty("--dx", `${dx}px`);
     orb.style.setProperty("--dy", `${dy}px`);
     orb.style.setProperty("--rgb", `${r},${g},${b}`);
+    orb.style.setProperty("--a", `${finalOpacity}`);
 
-    // tiny random delay so they don't “beat” together
     orb.style.animationDelay = `${randi(0, 900)}ms`;
 
-    orb.addEventListener("animationend", () => {
-      orb.remove();
-    });
-
+    orb.addEventListener("animationend", () => orb.remove(), { once: true });
     layer.appendChild(orb);
   }
 
-  // Prime a few immediately, then keep topping up
   for (let i = 0; i < Math.min(3, cfg.maxOrbs); i++) spawnOne();
-  setInterval(spawnOne, cfg.spawnEveryMs);
+  intervalId = window.setInterval(spawnOne, cfg.spawnEveryMs);
+
+  function stop({ removeLayer = false } = {}) {
+    if (stopped) return;
+    stopped = true;
+
+    if (intervalId != null) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    if (layer) {
+      layer.querySelectorAll(".bgOrb").forEach(el => el.remove());
+      if (removeLayer) {
+        layer.remove();
+        layer = null;
+      }
+    }
+  }
+
+  __orbBgStop = stop;
+  return { stop };
 }
 
 /**
@@ -222,10 +297,6 @@ export function renderPlatformLinks(links, hostId = "platformLinks"){
 
 /**
  * ===== Tabs: auto-active highlight for multi-page sites =====
- * Adds .active to the tab that matches current location.
- *
- * Usage: call autoMarkActiveTab() after the tab nav exists.
- * Assumes your tabs are anchors with class "tabBtn".
  */
 export function autoMarkActiveTab(){
   const path = (location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
