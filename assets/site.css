@@ -94,6 +94,7 @@ button:active{ transform:translateY(1px); }
 
 @media (min-width: 1100px){
   .grid{ grid-template-columns: 1fr 1fr; }
+  .card.span2{ grid-column: 1 / -1; }
 }
 
 .card{
@@ -175,6 +176,15 @@ tbody tr:last-child td{ border-bottom:none; }
 .statusDot.bad{
   background:var(--bad);
   box-shadow:0 0 0 3px rgba(255,107,107,.12);
+}
+
+.statusDot.off{
+  background: rgba(231,237,247,.22);
+  box-shadow: 0 0 0 3px rgba(231,237,247,.08);
+}
+
+tr.ended td{
+  opacity: .65;
 }
 
 .footer{
@@ -312,14 +322,6 @@ a.platformLink:active{
 
 .fadeScroll.isScrollable.atStart::before{ opacity:0; }
 .fadeScroll.isScrollable.atEnd::after{ opacity:0; }
-
-/* Small padding so fades don't harshly cover edges */
-/* .fadeScroll{
-  padding-left: 6px;
-  padding-right: 6px;
-  margin-left: -6px;
-  margin-right: -6px;
-} */
 
 /* Inner scroller stays purely a scroller */
 .fadeWrap > .tableScroll,
