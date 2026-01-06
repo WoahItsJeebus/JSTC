@@ -505,30 +505,37 @@ a.platformLink:active{
   z-index: 1;
 }
 
-/* Each orb reads variables set by JS:
-   --size, --dur, --blur, --left, --top, --dx, --dy, --rgb */
+/* Orb container now holds 2 inner layers that crossfade (morph),
+   instead of creating/removing many .bgOrb nodes (layering). */
 .bgOrb{
-	position: absolute;
-	left: var(--left);
-	top: var(--top);
-	width: var(--size);
-	height: var(--size);
-	border-radius: 999px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 420px;
+  height: 420px;
+  border-radius: 999px;
 
-	background: radial-gradient(
-		circle,
-		rgba(var(--rgb), var(--a)) 0%,
-		rgba(var(--rgb), 0) 70%
-	);
+  filter: blur(24px);
+  opacity: 0;
+  mix-blend-mode: screen;
 
-	filter: blur(var(--blur));
-	opacity: 0;
-	mix-blend-mode: screen;
+  transform: translate3d(0,0,0);
+  will-change: left, top, width, height, transform, opacity, filter;
+}
 
-	transform: translate3d(0,0,0) scale(0.65);
-	will-change: transform, opacity;
+.bgOrbLayer{
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
 
-	animation: orbLife var(--dur) ease-in-out forwards;
+  background: radial-gradient(
+    circle,
+    rgba(var(--rgb), var(--a)) 0%,
+    rgba(var(--rgb), 0) 70%
+  );
+
+  opacity: 0;
+  will-change: opacity;
 }
 
 @keyframes orbLife{
