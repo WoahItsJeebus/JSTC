@@ -508,27 +508,27 @@ a.platformLink:active{
 /* Each orb reads variables set by JS:
    --size, --dur, --blur, --left, --top, --dx, --dy, --rgb */
 .bgOrb{
-  position: absolute;
-  left: var(--left);
-  top: var(--top);
-  width: var(--size);
-  height: var(--size);
-  border-radius: 999px;
+	position: absolute;
+	left: var(--left);
+	top: var(--top);
+	width: var(--size);
+	height: var(--size);
+	border-radius: 999px;
 
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(var(--rgb), 0.55),
-    rgba(var(--rgb), 0.0) 62%
-  );
+	background: radial-gradient(
+		circle,
+		rgba(var(--rgb), var(--a)) 0%,
+		rgba(var(--rgb), 0) 70%
+	);
 
-  filter: blur(var(--blur));
-  opacity: 0;
-  mix-blend-mode: screen;
+	filter: blur(var(--blur));
+	opacity: 0;
+	mix-blend-mode: screen;
 
-  transform: translate3d(0,0,0) scale(0.65);
-  will-change: transform, opacity;
+	transform: translate3d(0,0,0) scale(0.65);
+	will-change: transform, opacity;
 
-  animation: orbLife var(--dur) ease-in-out forwards;
+	animation: orbLife var(--dur) ease-in-out forwards;
 }
 
 @keyframes orbLife{

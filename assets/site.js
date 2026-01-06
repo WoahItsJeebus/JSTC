@@ -22,8 +22,8 @@ export function startOrbBackground(opts = {}) {
     spawnEveryMs: 1100,
     sizeMin: 260,
     sizeMax: 560,
-    durMinMs: 5000,
-    durMaxMs: 12000,
+    durMinMs: 8000,
+    durMaxMs: 14000,
     blurMin: 18,
     blurMax: 30,
     margin: 0.12,
@@ -33,12 +33,12 @@ export function startOrbBackground(opts = {}) {
     // opacity: 0.22
     // opacity: { min: 0.14, max: 0.28 }
     // opacity: [0.14, 0.28]
-    opacity: { min: 0.14, max: 0.26 },
+    opacity: { min: 0.15, max: 0.4 },
 
     colors: [
       "#51b2f3",
-      "#39d4a1ff",
-      "#9b45e2ff",
+      "#39d4a1",
+      "#9b45e2",
     ],
     ...opts,
   };
@@ -121,7 +121,6 @@ export function startOrbBackground(opts = {}) {
 
     const [r, g, b, aHex] = ToRGBA(pick(cfg.colors));
 
-    // NEW: opacity resolved from cfg, multiplied by any hex alpha
     const baseOpacity = resolveOpacity(cfg.opacity);
     const finalOpacity = clamp01(baseOpacity * aHex);
 
