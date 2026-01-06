@@ -34,7 +34,7 @@ export function startOrbBackground(opts = {}) {
     // opacity option (same behavior as before)
     opacity: { min: 0.15, max: 0.4 },
 
-    colors: ["#20493fff", "#306459ff", "#2f5e7eff"],
+    colors: ["#20493f", "#306459", "#2f5e7e"],
     ...opts,
   };
 
