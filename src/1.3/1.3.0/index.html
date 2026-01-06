@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+	<meta name="theme-color" content="#0b0f17">
+
+	<!-- iOS Add-to-Home-Screen / standalone -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+	<title>Skate. Reset Timers (Central-time anchored)</title>
+
+	<link rel="icon" href="favicon.ico" sizes="any">
+	<link rel="stylesheet" href="./assets/site.css">
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Skate. Reset Timers</h1>
+        <div class="sub">
+          Reset rules are defined in <code class="inline">America/Chicago</code>:
+          daily at <code class="inline">12:00</code>, weekly on <code class="inline">Monday 12:00</code>.
+          The “Next (Local)” column shows the device timezone; the “Next (UTC)” column is the anchor reference.
+        </div>
+      </div>
+
+      <!-- Toolbar: scrolls on narrow screens + fades only when overflow exists -->
+      <div class="toolbar hScroll fadeScroll" id="toolbarScroll">
+		  <div class="pill" id="nowPill">Now: —</div>
+		  <div class="pill" id="localTzPill">Local TZ: —</div>
+		  <div class="pill" id="resetTzPill">Reset TZ: —</div>
+		  <!-- <button id="refreshBtn" type="button">Refresh</button> -->
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="head">
+          <div class="title"><span class="statusDot" id="dailyDot"></span>Daily</div>
+          <div class="tag">COUNTDOWN</div>
+        </div>
+
+        <!-- Table scroll + fades only when overflow exists -->
+        <div class="fadeWrap fadeScroll" id="dailyFade">
+  			<div class="tableScroll" id="dailyScroll">
+				<table>
+					<thead>
+					<tr>
+						<th style="width:28%">Timer</th>
+						<th style="width:24%">Next (Local)</th>
+						<th style="width:24%">Next (UTC)</th>
+						<th style="width:24%">Remaining</th>
+					</tr>
+					</thead>
+					<tbody id="dailyBody"></tbody>
+				</table>
+			</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="head">
+          <div class="title"><span class="statusDot" id="weeklyDot"></span>Weekly</div>
+          <div class="tag">COUNTDOWN</div>
+        </div>
+
+        <!-- Table scroll + fades only when overflow exists -->
+        <div class="fadeWrap fadeScroll" id="weeklyFade">
+  			<div class="tableScroll" id="weeklyScroll">
+				<table>
+					<thead>
+					<tr>
+						<th style="width:28%">Timer</th>
+						<th style="width:24%">Next (Local)</th>
+						<th style="width:24%">Next (UTC)</th>
+						<th style="width:24%">Remaining</th>
+					</tr>
+					</thead>
+					<tbody id="weeklyBody"></tbody>
+				</table>
+		  </div>
+        </div>
+      </section>
+
+      <section class="card span2" id="tempSection">
+        <div class="head">
+          <div class="title"><span class="statusDot off" id="tempDot"></span>Temporary</div>
+          <div class="tag">COUNTDOWN</div>
+        </div>
+
+        <!-- Table scroll + fades only when overflow exists -->
+        <div class="fadeWrap fadeScroll" id="tempFade">
+          <div class="tableScroll" id="tempScroll">
+            <table>
+              <thead>
+              <tr>
+                <th style="width:28%">Timer</th>
+                <th style="width:24%">End (Local)</th>
+                <th style="width:24%">End (UTC)</th>
+                <th style="width:24%">Remaining</th>
+              </tr>
+              </thead>
+              <tbody id="tempBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+	<div class="footer">
+		<button id="hardRefreshBtn" type="button" title="Hard refresh">↻</button>
+		<code class="inline" id="versionCode">v—</code>
+	</div>
+
+	<div class="tabsBar">
+		<nav class="tabs">
+			<a class="tabBtn active" href="./"><span class="tabDot"></span> Timers</a>
+			<a class="tabBtn" href="./pages/about/"><span class="tabDot"></span> About</a>
+		</nav>
+	</div>
+  </div>
+
+<script>
+/**
+ * CONFIG
+ */
+
+const APP_VERSION = "1.3.0";
+
+/**
+ * Reset definition timezone:
+ *   "America/Chicago" means noon Central, with DST handled correctly.
+ */
+const RESET_TZ = "America/Chicago";
+
+/**
+ * Timers:
+ *  - "daily": repeats every day at wall-clock time in RESET_TZ
+ *  - "weekly": repeats weekly at wall-clock time in RESET_TZ
+ *      - day: 0..6 where 0=Sunday, 1=Monday, ... 6=Saturday
+ *  - "temp": one-off countdown to an end date/time
+ *      - end: "YYYY-MM-DD HH:MM[:SS]" interpreted in (t.tz || RESET_TZ)
+ *        OR
+ *      - endUtc: ISO string parseable by Date(), e.g. "2026-02-01T18:00:00Z"
+ *
+ * Note: Temporary timers do NOT roll over — once the end time passes,
+ *       the row stays visible and shows ENDED.
+ */
+const timers = [
+	{ name: "Daily Challenges Reset",  kind: "daily",  time: "11:00:00", enabled: true },
+	{ name: "Weekly Challenges Reset", kind: "weekly", day: 1, time: "11:00:00", enabled: true }, // Monday
+	{ name: "Winter Roll-stice Event", kind: "temp", end: "2026-01-14 11:00:00", tz: "America/Chicago", enabled: true },
+	{ name: "Sub-Zero Shred Shop", kind: "temp", end: "2026-01-14 11:00:00", tz: "America/Chicago", enabled: true },
+	{ name: "2026 Countdown Bundle", kind: "temp", end: "2026-01-06 11:00:00", tz: "America/Chicago", enabled: true },
+	{ name: "SCI-FI Bundle", kind: "temp", end: "2026-01-13 11:00:00", tz: "America/Chicago", enabled: true },
+	
+	// Example temporary timer:
+	// { name: "Event Ends", kind: "temp", end: "2026-01-31 11:00:00", tz: "America/Chicago", enabled: true },
+	// Or:
+	// { name: "Event Ends", kind: "temp", endUtc: "2026-01-31T18:00:00Z", enabled: true },
+];
+
+// Local TZ name (display only)
+const LOCAL_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || "Local";
+
+// ---- DOM refs
+const dailyBody    = document.getElementById("dailyBody");
+const weeklyBody   = document.getElementById("weeklyBody");
+const tempBody     = document.getElementById("tempBody");
+const nowPill      = document.getElementById("nowPill");
+const localTzPill  = document.getElementById("localTzPill");
+const resetTzPill  = document.getElementById("resetTzPill");
+const dailyDot     = document.getElementById("dailyDot");
+const weeklyDot    = document.getElementById("weeklyDot");
+const tempDot      = document.getElementById("tempDot");
+const versionCode  = document.getElementById("versionCode");
+const tempSection  = document.getElementById("tempSection");
+
+// document.getElementById("refreshBtn").addEventListener("click", () => render(true));
+document.getElementById("hardRefreshBtn")?.addEventListener("click", hardReload);
+
+function hardReload(){
+  // Force a re-request by changing the URL query.
+  // Works better than location.reload(true) (deprecated) and helps iOS PWA caching.
+  const url = new URL(location.href);
+  url.searchParams.set("_r", String(Date.now()));
+  location.replace(url.toString());
+}
+
+function pad2(n){ return String(n).padStart(2, "0"); }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  }[c]));
+}
+
+function parseTime(s){
+  const parts = String(s||"").trim().split(":");
+  if (parts.length < 2 || parts.length > 3) return null;
+  const h = Number(parts[0]), m = Number(parts[1]), sec = parts.length === 3 ? Number(parts[2]) : 0;
+  if (![h,m,sec].every(Number.isFinite)) return null;
+  if (h<0||h>23||m<0||m>59||sec<0||sec>59) return null;
+  return {h,m,sec};
+}
+
+function formatDuration(totalSec){
+  totalSec = Math.max(0, Math.floor(totalSec));
+  const days = Math.floor(totalSec / 86400);
+  totalSec %= 86400;
+  const hrs = Math.floor(totalSec / 3600);
+  totalSec %= 3600;
+  const mins = Math.floor(totalSec / 60);
+  const secs = totalSec % 60;
+  if (days > 0) return `${days}d ${pad2(hrs)}h ${pad2(mins)}m ${pad2(secs)}s`;
+  return `${pad2(hrs)}h ${pad2(mins)}m ${pad2(secs)}s`;
+}
+
+function urgencyDot(dotEl, minRemaining){
+  dotEl.classList.remove("warn","bad");
+  if (minRemaining <= 300) dotEl.classList.add("bad");        // <= 5 min
+  else if (minRemaining <= 3600) dotEl.classList.add("warn"); // <= 1 hour
+}
+
+/**
+ * Timezone math helpers
+ */
+
+function getZonedParts(dateUtc, timeZone){
+	const dtf = new Intl.DateTimeFormat("en-US", {
+		timeZone,
+		year:"numeric", month:"2-digit", day:"2-digit",
+		hour:"2-digit", minute:"2-digit", second:"2-digit",
+		hour12:false,
+		weekday:"short",
+	});
+	const parts = dtf.formatToParts(dateUtc);
+	const map = {};
+	for (const p of parts){
+		if (p.type !== "literal") map[p.type] = p.value;
+	}
+  const wdMap = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+  return {
+    year: Number(map.year),
+    month: Number(map.month),
+    day: Number(map.day),
+    hour: Number(map.hour),
+    minute: Number(map.minute),
+    second: Number(map.second),
+    weekday: wdMap[map.weekday] ?? 0,
+  };
+}
+
+function tzOffsetMinutes(dateUtc, timeZone){
+  const z = getZonedParts(dateUtc, timeZone);
+  const asIfUtc = Date.UTC(z.year, z.month-1, z.day, z.hour, z.minute, z.second);
+  return (asIfUtc - dateUtc.getTime()) / 60000;
+}
+
+function wallToUtcDate(y, m, d, h, mi, s, timeZone){
+  const naiveUtcMs = Date.UTC(y, m-1, d, h, mi, s);
+  let guess = new Date(naiveUtcMs);
+  let off1 = tzOffsetMinutes(guess, timeZone);
+  let utcMs1 = naiveUtcMs - off1 * 60000;
+
+  guess = new Date(utcMs1);
+  let off2 = tzOffsetMinutes(guess, timeZone);
+  let utcMs2 = naiveUtcMs - off2 * 60000;
+
+  return new Date(utcMs2);
+}
+
+function addDaysToYMD(y, m, d, days){
+  const base = new Date(Date.UTC(y, m-1, d, 0, 0, 0));
+  base.setUTCDate(base.getUTCDate() + days);
+  return { y: base.getUTCFullYear(), m: base.getUTCMonth()+1, d: base.getUTCDate() };
+}
+
+function fmtInTZ(dateUtc, timeZone){
+  const z = getZonedParts(dateUtc, timeZone);
+  return `${z.year}-${pad2(z.month)}-${pad2(z.day)} ${pad2(z.hour)}:${pad2(z.minute)}:${pad2(z.second)}`;
+}
+
+function fmtLocal(dateUtc){
+  if (LOCAL_TZ && LOCAL_TZ !== "Local") return fmtInTZ(dateUtc, LOCAL_TZ);
+  return `${dateUtc.getFullYear()}-${pad2(dateUtc.getMonth()+1)}-${pad2(dateUtc.getDate())} `
+       + `${pad2(dateUtc.getHours())}:${pad2(dateUtc.getMinutes())}:${pad2(dateUtc.getSeconds())}`;
+}
+
+function fmtUtc(dateUtc){
+  return `${dateUtc.getUTCFullYear()}-${pad2(dateUtc.getUTCMonth()+1)}-${pad2(dateUtc.getUTCDate())} `
+       + `${pad2(dateUtc.getUTCHours())}:${pad2(dateUtc.getUTCMinutes())}:${pad2(dateUtc.getUTCSeconds())}`;
+}
+
+function compareWallTimeToTarget(nowZ, tm){
+  if (nowZ.hour !== tm.h) return nowZ.hour < tm.h ? -1 : 1;
+  if (nowZ.minute !== tm.m) return nowZ.minute < tm.m ? -1 : 1;
+  if (nowZ.second !== tm.sec) return nowZ.second < tm.sec ? -1 : 1;
+  return 0;
+}
+
+function nextDailyAnchored(nowUtc, timeObj){
+  const nowZ = getZonedParts(nowUtc, RESET_TZ);
+  let targetY = nowZ.year, targetM = nowZ.month, targetD = nowZ.day;
+
+  if (compareWallTimeToTarget(nowZ, timeObj) >= 0){
+    const nxt = addDaysToYMD(targetY, targetM, targetD, 1);
+    targetY = nxt.y; targetM = nxt.m; targetD = nxt.d;
+  }
+
+  return wallToUtcDate(targetY, targetM, targetD, timeObj.h, timeObj.m, timeObj.sec, RESET_TZ);
+}
+
+function nextWeeklyAnchored(nowUtc, targetWeekday, timeObj){
+  const nowZ = getZonedParts(nowUtc, RESET_TZ);
+  let daysUntil = (targetWeekday - nowZ.weekday + 7) % 7;
+
+  if (daysUntil === 0 && compareWallTimeToTarget(nowZ, timeObj) >= 0){
+    daysUntil = 7;
+  }
+
+  const tgt = addDaysToYMD(nowZ.year, nowZ.month, nowZ.day, daysUntil);
+  return wallToUtcDate(tgt.y, tgt.m, tgt.d, timeObj.h, timeObj.m, timeObj.sec, RESET_TZ);
+}
+
+function addRowTo(bodyEl, name, colLocal, colUtc, remainStr, trClass = ""){
+  const tr = document.createElement("tr");
+  if (trClass) tr.className = trClass;
+  tr.innerHTML = `
+    <td>${escapeHtml(name)}</td>
+    <td class="mono muted">${escapeHtml(colLocal)}</td>
+    <td class="mono muted">${escapeHtml(colUtc)}</td>
+    <td class="mono muted">${escapeHtml(remainStr)}</td>
+  `;
+  bodyEl.appendChild(tr);
+}
+
+function setTempDotState(dotEl, hasActive, minRemaining){
+  dotEl.classList.remove("warn","bad","off");
+  if (!hasActive){
+    dotEl.classList.add("off");
+    return;
+  }
+  urgencyDot(dotEl, minRemaining);
+}
+
+function parseWallDateTime(s){
+  // Accept:
+  //  - "YYYY-MM-DD"
+  //  - "YYYY-MM-DD HH:MM"
+  //  - "YYYY-MM-DD HH:MM:SS"
+  // Also accepts a "T" between date/time.
+  const m = String(s||"").trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?$/);
+  if (!m) return null;
+  const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+  const h = Number(m[4] ?? 0), mi = Number(m[5] ?? 0), sec = Number(m[6] ?? 0);
+  if (![y,mo,d,h,mi,sec].every(Number.isFinite)) return null;
+  if (mo<1||mo>12||d<1||d>31||h<0||h>23||mi<0||mi>59||sec<0||sec>59) return null;
+  return { y, mo, d, h, mi, sec };
+}
+
+function tempEndUtcDate(timer){
+  // Preferred: explicit UTC/offset end time
+  if (timer?.endUtc){
+    const dt = new Date(timer.endUtc);
+    if (!Number.isFinite(dt.getTime())) return null;
+    return dt;
+  }
+
+  // Otherwise: wall time in tz (defaults to RESET_TZ)
+  const parts = parseWallDateTime(timer?.end);
+  if (!parts) return null;
+  const tz = timer?.tz || RESET_TZ;
+  return wallToUtcDate(parts.y, parts.mo, parts.d, parts.h, parts.mi, parts.sec, tz);
+}
+
+function render(){
+	const nowUtc = new Date();
+
+	nowPill.textContent = `Now: ${nowUtc.toLocaleString(undefined, { hour12:false })}`;
+	localTzPill.textContent = `Local TZ: ${LOCAL_TZ}`;
+	resetTzPill.textContent = `Reset TZ: ${RESET_TZ}`;
+
+	dailyBody.textContent = "";
+	weeklyBody.textContent = "";
+	tempBody.textContent = "";
+
+	let minDaily = Infinity;
+	let minWeekly = Infinity;
+
+	let minTemp = Infinity;
+	let hasAnyTemp = false;
+	let hasActiveTemp = false;
+
+	for (const t of timers) {
+		if (!t || !t.enabled) continue;
+
+		const kind = String(t.kind||"").toLowerCase();
+		const name = t.name || "Unnamed";
+
+		if (kind === "temp"){
+			hasAnyTemp = true;
+			const endUtc = tempEndUtcDate(t);
+			if (!endUtc){
+				addRowTo(tempBody, name, "CONFIG ERROR", "—", "—");
+				continue;
+			}
+
+			const remainingRaw = Math.floor((endUtc.getTime() - nowUtc.getTime()) / 1000);
+			const ended = remainingRaw <= 0;
+			const remaining = Math.max(0, remainingRaw);
+
+			if (!ended){
+				hasActiveTemp = true;
+				minTemp = Math.min(minTemp, remaining);
+			}
+
+			addRowTo(
+				tempBody,
+				name,
+				fmtLocal(endUtc),
+				fmtUtc(endUtc),
+				ended ? "ENDED" : formatDuration(remaining),
+				ended ? "ended" : ""
+			);
+
+			continue;
+		}
+
+		// daily/weekly
+		const tm = parseTime(t.time);
+		if (!tm){
+			addRowTo(kind === "weekly" ? weeklyBody : dailyBody, name, "CONFIG ERROR", "—", "—");
+			continue;
+		}
+
+		let nextUtcDate;
+
+		if (kind === "daily"){
+			nextUtcDate = nextDailyAnchored(nowUtc, tm);
+		} else if (kind === "weekly"){
+			const wd = Number.isFinite(t.day) ? t.day : NaN;
+			if (!(wd >= 0 && wd <= 6)){
+				addRowTo(weeklyBody, name, "CONFIG ERROR", "—", "—");
+				continue;
+			}
+			nextUtcDate = nextWeeklyAnchored(nowUtc, wd, tm);
+		} else {
+			addRowTo(dailyBody, name, "CONFIG ERROR", "—", "—");
+			continue;
+		}
+
+		const remaining = Math.max(0, Math.floor((nextUtcDate.getTime() - nowUtc.getTime()) / 1000));
+		if (kind === "daily") minDaily = Math.min(minDaily, remaining);
+		if (kind === "weekly") minWeekly = Math.min(minWeekly, remaining);
+
+		addRowTo(
+			kind === "weekly" ? weeklyBody : dailyBody,
+			name,
+			fmtLocal(nextUtcDate),
+			fmtUtc(nextUtcDate),
+			formatDuration(remaining)
+		);
+	}
+
+	// Hide the entire Temporary section if there are zero enabled temp timers
+	if (!hasAnyTemp){
+		tempSection?.setAttribute("hidden", "");
+		tempDot?.classList.add("off");
+	} else {
+		tempSection?.removeAttribute("hidden");
+	}
+
+
+	if (minDaily === Infinity)
+		minDaily = 999999999;
+	if (minWeekly === Infinity)
+		minWeekly = 999999999;
+	
+	urgencyDot(dailyDot, minDaily);
+	urgencyDot(weeklyDot, minWeekly);
+	setTempDotState(tempDot, hasActiveTemp, minTemp);
+
+	// Keep fades in sync (module sets this)
+	if (window.__syncFades)
+		window.__syncFades();
+}
+
+/**
+ * Startup
+ */
+versionCode.textContent = `v${APP_VERSION}`;
+
+render();
+setInterval(render, 1000);
+</script>
+
+<script type="module">
+	import { attachFadeToScroller, autoMarkActiveTab, startOrbBackground } from "./assets/site.js";
+	const syncs = [];
+
+	syncs.push(attachFadeToScroller(
+		document.getElementById("dailyScroll"),
+		document.getElementById("dailyFade")
+	));
+
+	syncs.push(attachFadeToScroller(
+		document.getElementById("weeklyScroll"),
+		document.getElementById("weeklyFade")
+	));
+
+	syncs.push(attachFadeToScroller(
+		document.getElementById("tempScroll"),
+		document.getElementById("tempFade")
+	));
+
+	syncs.push(attachFadeToScroller(
+		document.getElementById("toolbarScroll"),
+		document.getElementById("toolbarFade")
+	));
+
+	window.__syncFades = () => {
+		for (const fn of syncs) if (typeof fn === "function") fn();
+	};
+
+	window.__syncFades();
+	startOrbBackground({ maxOrbs: 3, spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
+	autoMarkActiveTab();
+</script>
+</body>
+</html>
