@@ -18,7 +18,7 @@ export function startOrbBackground(opts = {}) {
   if (typeof __orbBgStop === "function") __orbBgStop();
 
   const cfg = {
-    maxOrbs: 7,
+    maxOrbs: 5,
 
     // Re-using this as "stagger start" now (no more spawning/stacking)
     spawnEveryMs: 700,

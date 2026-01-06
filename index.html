@@ -129,7 +129,7 @@
  * CONFIG
  */
 
-const APP_VERSION = "1.3.4";
+const APP_VERSION = "1.3.5";
 
 /**
  * Reset definition timezone:
@@ -527,7 +527,7 @@ setInterval(render, 1000);
 	};
 
 	window.__syncFades();
-	startOrbBackground({ maxOrbs: Math.random() * 5, spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
+	startOrbBackground({ spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
 	autoMarkActiveTab();
 </script>
 </body>

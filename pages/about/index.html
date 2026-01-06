@@ -59,7 +59,7 @@
 			{ label: "Roblox", url: "https://www.roblox.com/users/3817884/profile" },
 		];
 
-		startOrbBackground({ maxOrbs: Math.random() * 5, spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
+		startOrbBackground({ spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
 		renderPlatformLinks(platformLinks, "platformLinks");
 		attachFadeToScroller(document.getElementById("platformLinks"));
 		autoMarkActiveTab();
