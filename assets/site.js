@@ -22,13 +22,13 @@ export function startOrbBackground(opts = {}) {
 
     // Re-using this as "stagger start" now (no more spawning/stacking)
     spawnEveryMs: 700,
-
+	
     sizeMin: 260,
     sizeMax: 560,
-    durMinMs: 9000,
-    durMaxMs: 16000,
-    blurMin: 18,
-    blurMax: 30,
+    durMinMs: 5000,
+    durMaxMs: 13000,
+    blurMin: 14,
+    blurMax: 24,
     margin: 0.12,
 
     // opacity option (same behavior as before)
