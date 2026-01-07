@@ -684,7 +684,8 @@ input[type="range"]{
 .selectWrap{
 	position:relative;
 	flex:1;
-	min-width:120px;
+	min-width:80px;
+	opacity:1;
 }
 
 .selectWrap::after{
@@ -698,7 +699,7 @@ input[type="range"]{
 	border-right:2px solid var(--muted);
 	border-bottom:2px solid var(--muted);
 	pointer-events:none;
-	opacity:.9;
+	opacity:1;
 }
 
 .selectWrap select{

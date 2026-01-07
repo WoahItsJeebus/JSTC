@@ -90,12 +90,15 @@
 			"Integrated the global theme into dropdown lists' theme for better readability."
 		],
 		"1.4.5": [
-			"Adjusted label padding for versions on mobile devices.",
+			"Adjusted label padding for release notes selection box on mobile devices.",
 			"Adjusted refresh button to be circular.",
 			"Fixed release notes typos."
 		],
 		"1.4.6": [
-			"Adjusted label padding for versions on mobile devices."
+			"Adjusted label padding for release notes selection box on mobile devices."
+		],
+		"1.4.7": [
+			"Adjusted label opacity and padding for release notes selection box on mobile devices."
 		]
 	}
 }
