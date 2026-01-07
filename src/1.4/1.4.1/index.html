@@ -126,6 +126,11 @@
   </div>
 
 <script>
+/**
+ * CONFIG
+ */
+
+const APP_VERSION = "1.4.1";
 
 /**
  * Reset definition timezone:
@@ -475,6 +480,7 @@ function render(){
 /**
  * Startup
  */
+versionCode.textContent = `v${APP_VERSION}`;
 
 render();
 setInterval(render, 1000);
@@ -483,9 +489,6 @@ setInterval(render, 1000);
 <script type="module">
 	import { attachFadeToScroller, autoMarkActiveTab, initAppSettings, startOrbBackgroundFromSettings } from "./assets/site.js";
 	const syncs = [];
-
-	import { JSTC_VERSION } from "./assets/site.js";
-	document.getElementById("versionCode").textContent = `v${JSTC_VERSION}`;
 
 	// Apply saved settings (theme + orbs toggles, etc.)
 	initAppSettings();

@@ -148,6 +148,11 @@
       </section>
     </div>
 
+	<div class="footer">
+		<button id="hardRefreshBtn" type="button" title="Hard refresh">↻</button>
+		<code class="inline" id="versionCode">v—</code>
+	</div>
+
 	<div class="tabsBar">
 		<nav class="tabs">
 			<a class="tabBtn" data-tab="timers" href="../../"><span class="tabDot"></span> Timers</a>
@@ -169,6 +174,9 @@
     startOrbBackgroundFromSettings,
     autoMarkActiveTab
   } from "../../assets/site.js";
+
+  import { JSTC_VERSION } from "../../assets/site.js";
+  document.getElementById("versionCode").textContent = `v${JSTC_VERSION}`;
 
   initAppSettings();
   startOrbBackgroundFromSettings({ spawnEveryMs: 900, sizeMin: 300, sizeMax: 640 });
@@ -345,9 +353,11 @@
     S.orbs.colors = [els.orbC0.value, els.orbC1.value, els.orbC2.value];
     commit(S);
   }
+  
   els.orbC0.addEventListener("input", updateOrbColors);
   els.orbC1.addEventListener("input", updateOrbColors);
   els.orbC2.addEventListener("input", updateOrbColors);
+  document.getElementById("hardRefreshBtn")?.addEventListener("click", hardReload);
 
   // Export / Import
   els.exportBtn.addEventListener("click", () => {
