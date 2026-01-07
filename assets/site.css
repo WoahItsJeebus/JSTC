@@ -684,7 +684,7 @@ input[type="range"]{
 .selectWrap{
 	position:relative;
 	flex:1;
-	min-width:80px;
+	min-width:120px;
 }
 
 .selectWrap::after{

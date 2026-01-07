@@ -93,6 +93,9 @@
 			"Adjusted label padding for versions on mobile devices.",
 			"Adjusted refresh button to be circular.",
 			"Fixed release notes typos."
+		],
+		"1.4.6": [
+			"Adjusted label padding for versions on mobile devices."
 		]
 	}
 }
