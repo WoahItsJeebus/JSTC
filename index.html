@@ -118,9 +118,9 @@
 
 	<div class="tabsBar">
 		<nav class="tabs">
-			<a class="tabBtn active" href="./"><span class="tabDot"></span> Timers</a>
-			<a class="tabBtn" href="./pages/about/"><span class="tabDot"></span> About</a>
-			<a class="tabBtn" href="./pages/settings/"><span class="tabDot"></span> Settings</a>
+			<a class="tabBtn active" data-tab="timers" href="./"><span class="tabDot"></span> Timers</a>
+			<a class="tabBtn" data-tab="about" href="./pages/about/"><span class="tabDot"></span> About</a>
+			<a class="tabBtn" data-tab="settings" href="./pages/settings/"><span class="tabDot"></span> Settings</a>
 		</nav>
 	</div>
   </div>
@@ -522,7 +522,7 @@ setInterval(render, 1000);
 	// Use saved orb settings, but keep page-specific sizing defaults
 	startOrbBackgroundFromSettings({ spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
 
-	autoMarkActiveTab();
+	autoMarkActiveTab("timers");
 </script>
 </body>
 </html>

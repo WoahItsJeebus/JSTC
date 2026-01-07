@@ -44,12 +44,12 @@
     </section>
 
     <div class="tabsBar">
-      <nav class="tabs">
-        <a class="tabBtn" href="../../"><span class="tabDot"></span> Timers</a>
-        <a class="tabBtn active" href="./"><span class="tabDot"></span> About</a>
-        <a class="tabBtn" href="../settings/"><span class="tabDot"></span> Settings</a>
-      </nav>
-    </div>
+		<nav class="tabs">
+			<a class="tabBtn" data-tab="timers" href="../../"><span class="tabDot"></span> Timers</a>
+			<a class="tabBtn active" data-tab="about" href="./"><span class="tabDot"></span> About</a>
+			<a class="tabBtn" data-tab="settings" href="../settings/"><span class="tabDot"></span> Settings</a>
+		</nav>
+	</div>
   </div>
 
   <script type="module">
@@ -74,7 +74,7 @@
 
     renderPlatformLinks(platformLinks, "platformLinks");
     attachFadeToScroller(document.getElementById("platformLinks"));
-    autoMarkActiveTab();
+    autoMarkActiveTab("about");
   </script>
 
 </body>

@@ -674,23 +674,24 @@ export function renderPlatformLinks(links, hostId = "platformLinks"){
 }
 
 /**
- * ===== Tabs: auto-active highlight for multi-page sites =====
+ * Mark the active bottom tab.
+ * Pass a key from the page: "timers", "about", "settings"
+ *
+ * If omitted, it tries to infer from the current path as a fallback.
  */
-export function autoMarkActiveTab(){
-  const p = location.pathname.toLowerCase();
-  const onAbout = p.includes("/about/");
-  const onSettings = p.includes("/settings/");
+export function autoMarkActiveTab(pageKey) {
+  function inferKeyFromPath() {
+    const p = location.pathname.toLowerCase();
+    // tolerate both "/pages/about/" and "/about/" structures
+    if (p.includes("/settings/")) return "settings";
+    if (p.includes("/about/")) return "about";
+    return "timers";
+  }
 
-  document.querySelectorAll(".tabs .tabBtn").forEach(a => {
-    const href = (a.getAttribute("href") || "").toLowerCase();
-    const isAboutLink = href.includes("/about/");
-    const isSettingsLink = href.includes("/settings/");
+  const key = String(pageKey || inferKeyFromPath()).toLowerCase();
 
-    let active = false;
-    if (isAboutLink) active = onAbout;
-    else if (isSettingsLink) active = onSettings;
-    else active = !onAbout && !onSettings;
-
-    a.classList.toggle("active", active);
+  document.querySelectorAll(".tabs .tabBtn").forEach((a) => {
+    const k = (a.getAttribute("data-tab") || "").toLowerCase();
+    a.classList.toggle("active", k === key);
   });
 }
