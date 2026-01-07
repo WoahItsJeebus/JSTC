@@ -172,7 +172,8 @@
     exportAppSettingsJson,
     importAppSettingsJson,
     startOrbBackgroundFromSettings,
-    autoMarkActiveTab
+    autoMarkActiveTab,
+	hardReload
   } from "../../assets/site.js";
 
   import { JSTC_VERSION } from "../../assets/site.js";
@@ -353,7 +354,7 @@
     S.orbs.colors = [els.orbC0.value, els.orbC1.value, els.orbC2.value];
     commit(S);
   }
-  
+
   els.orbC0.addEventListener("input", updateOrbColors);
   els.orbC1.addEventListener("input", updateOrbColors);
   els.orbC2.addEventListener("input", updateOrbColors);

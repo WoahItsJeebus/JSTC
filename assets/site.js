@@ -10,7 +10,7 @@
 
 
 let __orbBgStop = null;
-export const JSTC_VERSION = "1.4.2";
+export const JSTC_VERSION = "1.4.3";
 
 export function startOrbBackground(opts = {}) {
   const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
@@ -382,6 +382,14 @@ export function startOrbBackground(opts = {}) {
 
   __orbBgStop = stop;
   return { stop };
+}
+
+export function hardReload(){
+  // Force a re-request by changing the URL query.
+  // Works better than location.reload(true) (deprecated) and helps iOS PWA caching.
+  const url = new URL(location.href);
+  url.searchParams.set("_r", String(Date.now()));
+  location.replace(url.toString());
 }
 
 /* ============================================================

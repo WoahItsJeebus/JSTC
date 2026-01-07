@@ -63,7 +63,8 @@
       attachFadeToScroller,
       autoMarkActiveTab,
       initAppSettings,
-      startOrbBackgroundFromSettings
+      startOrbBackgroundFromSettings,
+	  hardReload
     } from "../../assets/site.js";
 
 	import { JSTC_VERSION } from "../../assets/site.js";
@@ -81,7 +82,7 @@
     startOrbBackgroundFromSettings({ spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
 
 	document.getElementById("hardRefreshBtn")?.addEventListener("click", hardReload);
-	
+
     renderPlatformLinks(platformLinks, "platformLinks");
     attachFadeToScroller(document.getElementById("platformLinks"));
     autoMarkActiveTab("about");
