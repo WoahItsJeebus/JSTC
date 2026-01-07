@@ -75,11 +75,11 @@ button{
   border:1px solid var(--border);
   background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
   color:var(--text);
-  padding:8px 12px;
-  border-radius:10px;
+  padding:4px 8px;
+  border-radius:128px;
   cursor:pointer;
-  font-weight:600;
-  font-size:13px;
+  font-weight:500;
+  font-size:14px;
   white-space:nowrap;
 }
 
@@ -684,7 +684,7 @@ input[type="range"]{
 .selectWrap{
 	position:relative;
 	flex:1;
-	min-width:40px;
+	min-width:80px;
 }
 
 .selectWrap::after{

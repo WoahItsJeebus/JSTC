@@ -112,7 +112,7 @@
     </div>
 
 	<div class="footer">
-		<button id="hardRefreshBtn" type="button" title="Hard refresh">↻</button>
+		<button id="hardRefreshBtn" type="button" title="Refresh">↻</button>
 		<code class="inline" id="versionCode">v—</code>
 	</div>
 
@@ -477,7 +477,7 @@ setInterval(render, 1000);
 
 	document.getElementById("versionCode").textContent = `v${JSTC_VERSION}`;
 	document.getElementById("hardRefreshBtn")?.addEventListener("click", hardReload);
-	
+
 	// Apply saved settings (theme + orbs toggles, etc.)
 	initAppSettings();
 
