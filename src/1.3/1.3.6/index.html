@@ -120,7 +120,6 @@
 		<nav class="tabs">
 			<a class="tabBtn active" href="./"><span class="tabDot"></span> Timers</a>
 			<a class="tabBtn" href="./pages/about/"><span class="tabDot"></span> About</a>
-			<a class="tabBtn" href="./pages/settings/"><span class="tabDot"></span> Settings</a>
 		</nav>
 	</div>
   </div>
@@ -130,7 +129,7 @@
  * CONFIG
  */
 
-const APP_VERSION = "1.4.0";
+const APP_VERSION = "1.3.6";
 
 /**
  * Reset definition timezone:
@@ -158,7 +157,7 @@ const timers = [
 	{ name: "Sub-Zero Shred Shop", kind: "temp", end: "2026-01-14 12:00:00", tz: "America/Chicago", enabled: true },
 	{ name: "2026 Countdown Bundle", kind: "temp", end: "2026-01-06 12:00:00", tz: "America/Chicago", enabled: true },
 	{ name: "SCI-FI Bundle", kind: "temp", end: "2026-01-13 12:00:00", tz: "America/Chicago", enabled: true },
-
+	
 	// Example temporary timer:
 	// { name: "Event Ends", kind: "temp", end: "2026-01-31 11:00:00", tz: "America/Chicago", enabled: true },
 	// Or:
@@ -349,6 +348,11 @@ function setTempDotState(dotEl, hasActive, minRemaining){
 }
 
 function parseWallDateTime(s){
+  // Accept:
+  //  - "YYYY-MM-DD"
+  //  - "YYYY-MM-DD HH:MM"
+  //  - "YYYY-MM-DD HH:MM:SS"
+  // Also accepts a "T" between date/time.
   const m = String(s||"").trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?$/);
   if (!m) return null;
   const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
@@ -359,12 +363,14 @@ function parseWallDateTime(s){
 }
 
 function tempEndUtcDate(timer){
+  // Preferred: explicit UTC/offset end time
   if (timer?.endUtc){
     const dt = new Date(timer.endUtc);
     if (!Number.isFinite(dt.getTime())) return null;
     return dt;
   }
 
+  // Otherwise: wall time in tz (defaults to RESET_TZ)
   const parts = parseWallDateTime(timer?.end);
   if (!parts) return null;
   const tz = timer?.tz || RESET_TZ;
@@ -424,6 +430,7 @@ function render(){
 			continue;
 		}
 
+		// daily/weekly
 		const tm = parseTime(t.time);
 		if (!tm){
 			addRowTo(kind === "weekly" ? weeklyBody : dailyBody, name, "CONFIG ERROR", "—", "—");
@@ -459,6 +466,7 @@ function render(){
 		);
 	}
 
+	// Hide the entire Temporary section if there are zero enabled temp timers
 	if (!hasAnyTemp){
 		tempSection?.setAttribute("hidden", "");
 		tempDot?.classList.add("off");
@@ -466,13 +474,17 @@ function render(){
 		tempSection?.removeAttribute("hidden");
 	}
 
-	if (minDaily === Infinity) minDaily = 999999999;
-	if (minWeekly === Infinity) minWeekly = 999999999;
 
+	if (minDaily === Infinity)
+		minDaily = 999999999;
+	if (minWeekly === Infinity)
+		minWeekly = 999999999;
+	
 	urgencyDot(dailyDot, minDaily);
 	urgencyDot(weeklyDot, minWeekly);
 	setTempDotState(tempDot, hasActiveTemp, minTemp);
 
+	// Keep fades in sync (module sets this)
 	if (window.__syncFades)
 		window.__syncFades();
 }
@@ -487,11 +499,8 @@ setInterval(render, 1000);
 </script>
 
 <script type="module">
-	import { attachFadeToScroller, autoMarkActiveTab, initAppSettings, startOrbBackgroundFromSettings } from "./assets/site.js";
+	import { attachFadeToScroller, autoMarkActiveTab, startOrbBackground } from "./assets/site.js";
 	const syncs = [];
-
-	// Apply saved settings (theme + orbs toggles, etc.)
-	initAppSettings();
 
 	syncs.push(attachFadeToScroller(
 		document.getElementById("dailyScroll"),
@@ -510,7 +519,7 @@ setInterval(render, 1000);
 
 	syncs.push(attachFadeToScroller(
 		document.getElementById("toolbarScroll"),
-		document.getElementById("toolbarScroll")
+		document.getElementById("toolbarFade")
 	));
 
 	window.__syncFades = () => {
@@ -518,10 +527,7 @@ setInterval(render, 1000);
 	};
 
 	window.__syncFades();
-
-	// Use saved orb settings, but keep page-specific sizing defaults
-	startOrbBackgroundFromSettings({ spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
-
+	startOrbBackground({ spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
 	autoMarkActiveTab();
 </script>
 </body>

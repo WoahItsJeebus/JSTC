@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Skate. Reset Timers — About</title>
 
   <link rel="stylesheet" href="../../assets/site.css">
@@ -47,23 +47,35 @@
       <nav class="tabs">
         <a class="tabBtn" href="../../"><span class="tabDot"></span> Timers</a>
         <a class="tabBtn active" href="./"><span class="tabDot"></span> About</a>
+        <a class="tabBtn" href="../settings/"><span class="tabDot"></span> Settings</a>
       </nav>
     </div>
   </div>
 
-	<script type="module">
-		import { renderPlatformLinks, attachFadeToScroller, autoMarkActiveTab, startOrbBackground } from "../../assets/site.js";
+  <script type="module">
+    import {
+      renderPlatformLinks,
+      attachFadeToScroller,
+      autoMarkActiveTab,
+      initAppSettings,
+      startOrbBackgroundFromSettings
+    } from "../../assets/site.js";
 
-		const platformLinks = [
-			{ label: "GitHub", url: "https://github.com/WoahItsJeebus" },
-			{ label: "Roblox", url: "https://www.roblox.com/users/3817884/profile" },
-		];
+    // Apply saved settings (theme + orbs)
+    initAppSettings();
 
-		startOrbBackground({ spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
-		renderPlatformLinks(platformLinks, "platformLinks");
-		attachFadeToScroller(document.getElementById("platformLinks"));
-		autoMarkActiveTab();
-	</script>
+    const platformLinks = [
+      { label: "GitHub", url: "https://github.com/WoahItsJeebus" },
+      { label: "Roblox", url: "https://www.roblox.com/users/3817884/profile" },
+    ];
+
+    // Use saved orb settings, but keep page defaults if user didn't override them
+    startOrbBackgroundFromSettings({ spawnEveryMs: 1600, sizeMin: 340, sizeMax: 720 });
+
+    renderPlatformLinks(platformLinks, "platformLinks");
+    attachFadeToScroller(document.getElementById("platformLinks"));
+    autoMarkActiveTab();
+  </script>
 
 </body>
 </html>

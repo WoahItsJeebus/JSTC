@@ -3,9 +3,9 @@
    ============================================================ */
 
 /**
- * 
+ *
  * Orb Handler
- * 
+ *
 */
 
 let __orbBgStop = null;
@@ -22,7 +22,7 @@ export function startOrbBackground(opts = {}) {
 
     // Re-using this as "stagger start" now (no more spawning/stacking)
     spawnEveryMs: 700,
-	
+
     sizeMin: 260,
     sizeMax: 560,
     durMinMs: 5000,
@@ -382,6 +382,168 @@ export function startOrbBackground(opts = {}) {
   return { stop };
 }
 
+/* ============================================================
+   Settings (localStorage)
+   ============================================================ */
+
+export const JSTC_SETTINGS_KEY = "JSTC_SETTINGS_v1";
+
+export function getDefaultAppSettings() {
+  return {
+    version: 1,
+
+    // Theme vars map directly to CSS vars
+    themeVars: {
+      bg: "#0b0f17",
+      card: "#121a2a",
+      text: "#e7edf7",
+      muted: "#a9b4c7",
+      border: "rgba(255,255,255,.08)",
+      good: "#3ddc97",
+      warn: "#ffcc66",
+      bad: "#ff6b6b",
+    },
+
+    // Orbs (merged into startOrbBackground options)
+    orbs: {
+      enabled: true,
+      maxOrbs: 5,
+      opacity: { min: 0.35, max: 0.6 },
+      colors: ["#20493f", "#306459", "#2f5e7e"],
+    },
+
+    // Extra hard “off” switch
+    reduceMotion: false,
+  };
+}
+
+function _safeParseJson(raw) {
+  try {
+    const v = JSON.parse(raw);
+    return v && typeof v === "object" ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+export function loadAppSettings(defaults = getDefaultAppSettings()) {
+  try {
+    const raw = localStorage.getItem(JSTC_SETTINGS_KEY);
+    if (!raw) return structuredClone(defaults);
+
+    const parsed = _safeParseJson(raw);
+    if (!parsed) return structuredClone(defaults);
+
+    // Shallow merge is fine since we control shape
+    const merged = structuredClone(defaults);
+    if (parsed.themeVars && typeof parsed.themeVars === "object") {
+      merged.themeVars = { ...merged.themeVars, ...parsed.themeVars };
+    }
+    if (parsed.orbs && typeof parsed.orbs === "object") {
+      merged.orbs = { ...merged.orbs, ...parsed.orbs };
+    }
+    if (typeof parsed.reduceMotion === "boolean") merged.reduceMotion = parsed.reduceMotion;
+
+    return merged;
+  } catch {
+    return structuredClone(defaults);
+  }
+}
+
+export function saveAppSettings(settingsObj) {
+  try {
+    localStorage.setItem(JSTC_SETTINGS_KEY, JSON.stringify(settingsObj || {}));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function applyCssVars(vars) {
+  if (!vars || typeof vars !== "object") return;
+  const root = document.documentElement;
+  for (const [k, v] of Object.entries(vars)) {
+    if (v == null) continue;
+    const key = k.startsWith("--") ? k : `--${k}`;
+    root.style.setProperty(key, String(v));
+  }
+}
+
+export function applyAppSettings(settingsObj) {
+  const s = settingsObj || loadAppSettings();
+
+  applyCssVars(s.themeVars);
+
+  // If user explicitly disables motion, enforce it
+  document.documentElement.classList.toggle("reduceMotion", !!s.reduceMotion);
+
+  // If reduceMotion is on, we also treat orbs as disabled
+  const orbsEnabled = !!(s.orbs?.enabled) && !s.reduceMotion;
+  document.documentElement.classList.toggle("orbsOff", !orbsEnabled);
+
+  // If orbs are off, stop any currently running background
+  if (!orbsEnabled && typeof __orbBgStop === "function") {
+    __orbBgStop({ removeLayer: true });
+  }
+
+  return s;
+}
+
+/**
+ * Call this once per page at startup.
+ * - loads & applies settings
+ * - listens for changes from other tabs/pages
+ */
+export function initAppSettings(defaults = getDefaultAppSettings()) {
+  const s = applyAppSettings(loadAppSettings(defaults));
+
+  // Cross-tab/page sync
+  window.addEventListener("storage", (ev) => {
+    if (ev.key !== JSTC_SETTINGS_KEY) return;
+    applyAppSettings(loadAppSettings(defaults));
+  });
+
+  return s;
+}
+
+/**
+ * Convenience: use settings to drive orb behavior.
+ * (Still lets each page pass extra base options.)
+ */
+export function startOrbBackgroundFromSettings(baseOpts = {}) {
+  const s = loadAppSettings();
+  s.reduceMotion = !!s.reduceMotion;
+
+  const orbsEnabled = !!(s.orbs?.enabled) && !s.reduceMotion;
+  if (!orbsEnabled) return { stop() {} };
+
+  const opts = { ...baseOpts, ...(s.orbs || {}) };
+  return startOrbBackground(opts);
+}
+
+export function exportAppSettingsJson() {
+  return JSON.stringify(loadAppSettings(), null, 2);
+}
+
+export function importAppSettingsJson(jsonText) {
+  const parsed = _safeParseJson(String(jsonText || ""));
+  if (!parsed) return { ok: false, error: "Invalid JSON" };
+
+  // Merge into defaults so missing keys don’t nuke the app
+  const merged = loadAppSettings();
+  if (parsed.themeVars && typeof parsed.themeVars === "object") {
+    merged.themeVars = { ...merged.themeVars, ...parsed.themeVars };
+  }
+  if (parsed.orbs && typeof parsed.orbs === "object") {
+    merged.orbs = { ...merged.orbs, ...parsed.orbs };
+  }
+  if (typeof parsed.reduceMotion === "boolean") merged.reduceMotion = parsed.reduceMotion;
+
+  saveAppSettings(merged);
+  applyAppSettings(merged);
+  return { ok: true };
+}
+
 /**
  * ===== Fade scroll logic =====
  * Works with .fadeScroll + .isScrollable/.atStart/.atEnd CSS classes.
@@ -515,39 +677,19 @@ export function renderPlatformLinks(links, hostId = "platformLinks"){
  * ===== Tabs: auto-active highlight for multi-page sites =====
  */
 export function autoMarkActiveTab(){
-  const path = (location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
+  const p = location.pathname.toLowerCase();
+  const onAbout = p.includes("/about/");
+  const onSettings = p.includes("/settings/");
 
   document.querySelectorAll(".tabs .tabBtn").forEach(a => {
-    const href = (a.getAttribute("href") || "").split("/").filter(Boolean).pop() || "";
-    const hrefLower = href.toLowerCase();
-
-    // Folder links like "./" will often resolve to "" here; handle that:
-    const isTimers = (path === "index.html");
-    const isAbout  = (path === "index.html" && location.pathname.includes("/about/")); // GH Pages folder index
+    const href = (a.getAttribute("href") || "").toLowerCase();
+    const isAboutLink = href.includes("/about/");
+    const isSettingsLink = href.includes("/settings/");
 
     let active = false;
-
-    if (hrefLower === "index.html" || hrefLower === "" || hrefLower === "./" || hrefLower === "../" || hrefLower === "../../"){
-      // heuristics: if the link looks like "home", mark active when we're on home
-      active = isTimers && !location.pathname.includes("/about/");
-    } else if (hrefLower === "about" || hrefLower === "about/" || hrefLower === "index.html"){
-      // leave this alone — too ambiguous in raw href
-      active = false;
-    }
-
-    // Better: compare full normalized href target vs current path
-    // (works when href explicitly points to about folder)
-    const full = a.href.toLowerCase();
-    if (full.endsWith("/about/") || full.endsWith("/about/index.html")){
-      active = location.pathname.toLowerCase().includes("/about/");
-    }
-    if (full.endsWith("/index.html") || full.endsWith("/")){
-      // If the href is the repo root or index.html, mark active on home
-      // but not on /about/
-      if (!full.endsWith("/about/") && !full.endsWith("/about/index.html")){
-        active = !location.pathname.toLowerCase().includes("/about/");
-      }
-    }
+    if (isAboutLink) active = onAbout;
+    else if (isSettingsLink) active = onSettings;
+    else active = !onAbout && !onSettings;
 
     a.classList.toggle("active", active);
   });
