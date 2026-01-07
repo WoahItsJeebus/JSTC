@@ -1,0 +1,93 @@
+{
+	"1.0": {
+		"1.0.0": [
+			"Initial release.",
+			"Added daily + weekly countdown timers."
+		]
+	},
+	"1.1": {
+		"1.1.0": [
+			"Improved UI spacing on mobile.",
+			"Added favicon.",
+			"Added about page.",
+			"Added src folder to repo."
+		],
+		"1.1.1": [
+			"Added themes to scrollbars."
+		]
+	},
+	"1.2": {
+		"1.2.0": [
+			"Added tabs for different pages.",
+			"Added stylesheet for all pages to use."
+		],
+		"1.2.1": [
+			"Added black fade to suggest scrolling."
+		],
+		"1.2.2": [
+			"Created site.js for site-wide functions, constants, variables, and the like."
+		],
+		"1.2.3": [
+			"Added hard refresh buttons. iOS acts odd when using this tool as a web-app and makes it difficult to refresh the page fully. This is a workaround."
+		],
+		"1.2.4": [
+			"Added animated background."
+		],
+		"1.2.5": [
+			"Fixed spacing on timer cells."
+		],
+		"1.2.6": [
+			"Minor fixes to end times on some timers."
+		],
+		"1.2.7": [
+			"Adjusted layout for daily and weekly timer cells.",
+			"Fixed many issues with rendering UI objects on mobile devices."
+		],
+		"1.2.8": [
+			"Fixed toolbar slider.",
+			"Updated site.js functions.",
+			"Updated site.css for slightly brighter BG color palette.",
+			"Removed refresh timer buttons in favor of single reload webpage button."
+		]
+	},
+	"1.3": {
+		"1.3.0": [
+			"Added temporary timers (shops, events, etc.)",
+			"Reformatted times to display 'hours || minutes || seconds' instead of 'XX:XX:XX' for better readability. "
+		],
+		"1.3.1": [
+			"Fixed background animation bugs causing the animation process to crash."
+		],
+		"1.3.2": [
+			"Added opacity to background orbs."
+		],
+		"1.3.3": [
+			"Fixed timer endpoints.",
+			"Adjusted background animation to look more fluid."
+		],
+		"1.3.4": [
+			"Adjusted base orb count to 5.",
+			"Updated opacity to be more immersive"
+		]
+	},
+	"1.4": {
+		"1.4.0": [
+			"Updated default background properties.",
+			"Added ability to save/load settings with a dedicated settings page."
+		],
+		"1.4.1": [
+			"Added extra information to the settings page for usage clarity."
+		],
+		"1.4.2": [
+			"Added hard refresh button and version label to all webpages."
+		],
+		"1.4.3": [
+			"Fixed a crash with loading the refresh function causing timers on the main page to not start."
+		],
+		"1.4.4": [
+			"Added release notes section to 'about' page.",
+			"Added bugs section to 'about' page.",
+			"Integrated the global theme into dropdown lists' theme for better readability."
+		]
+	}
+}

@@ -664,3 +664,73 @@ input[type="range"]{
   background: rgba(0,0,0,.18);
   color: var(--muted);
 }
+
+/* =========================================
+   Themed <select> controls (Release Notes)
+   ========================================= */
+
+.rnControls{
+	display:flex;
+	gap:10px;
+	flex-wrap:wrap;
+	align-items:center;
+	margin-bottom:20px;
+}
+
+.rnLabel{
+  	min-width:40px;
+}
+
+.selectWrap{
+	position:relative;
+	flex:1;
+	min-width:40px;
+}
+
+.selectWrap::after{
+	content:"";
+	position:absolute;
+	right:14px;
+	top:50%;
+	width:6px;
+	height:6px;
+	transform: translateY(-60%) rotate(45deg);
+	border-right:2px solid var(--muted);
+	border-bottom:2px solid var(--muted);
+	pointer-events:none;
+	opacity:.9;
+}
+
+.selectWrap select{
+	width:100%;
+	padding:2px 40px 2px 12px;
+	border-radius:14px;
+	border:1px solid var(--stroke);
+	background: rgba(255,255,255,.06);
+	color: var(--text);
+	font: inherit;
+	outline: none;
+	height: 24px;
+
+	-webkit-appearance:none;
+	appearance:none;
+}
+
+.selectWrap select:hover{
+  	border-color: rgba(255,255,255,.22);
+}
+
+.selectWrap select:focus{
+	border-color: rgba(255,255,255,.28);
+	box-shadow: 0 0 0 3px rgba(255,255,255,.10);
+}
+
+.selectWrap select:disabled{
+	opacity:.55;
+	cursor:not-allowed;
+}
+
+.selectWrap option{
+	background: #0b1020;
+	color: #e9ecff;
+}

@@ -1,0 +1,6 @@
+[
+	{
+		"status": "investigating",
+		"bug": "Background orbs can be laggy at higher max capacities."
+	}
+]
