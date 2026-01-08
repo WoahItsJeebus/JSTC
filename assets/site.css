@@ -565,12 +565,12 @@ a.platformLink:active{
 }
 
 .tabsBar .tabs:hover{
-  background: rgba(0,0,0,.38);
+  background: rgba(0,0,0,.88);
 }
-	
+
 @media (hover: none){
   .tabsBar .tabs:active{
-    background: rgba(0,0,0,.38);
+    background: rgba(0,0,0,.88);
   }
 }
 
