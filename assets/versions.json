@@ -99,6 +99,12 @@
 		],
 		"1.4.7": [
 			"Adjusted label opacity and padding for release notes selection box on mobile devices."
+		],
+		"1.4.8": [
+			"Lowered default MaxOrbs from 5 to 3.",
+			"Increased default orb opacity from [0.35, 0.6] to [0.5, 0.7] (min/max).",
+			"Pinned refresh button to lower-left of the screen area.",
+			"Rewrote background animation to be more performance friendly on mobile devices. This ranges from opacity adjustment frequency to movement changes within screen bounds."
 		]
 	}
 }

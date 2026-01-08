@@ -20,83 +20,86 @@
       </div>
     </header>
 
-    <div class="grid">
-      <section class="card">
-        <div class="head">
-          <div class="title"><span class="statusDot"></span>Credits & Platforms</div>
-          <div class="tag">LINKS</div>
-        </div>
-
-        <div style="padding:14px;">
-          <div class="footer" style="margin-top:0;">
-            <span class="platformLinks hScroll fadeScroll" id="platformLinks"></span>
-          </div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="head">
-          <div class="title"><span class="statusDot warn"></span>Known Bugs</div>
-          <div class="tag">bugs.json</div>
-        </div>
-
-        <div class="fadeWrap fadeScroll" id="bugsFade">
-          <div class="tableScroll" id="bugsScroll">
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:24%">Status</th>
-                  <th>Bug</th>
-                  <th style="width:18%">Info</th>
-                </tr>
-              </thead>
-              <tbody id="bugsBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section class="card span2">
-        <div class="head">
-          <div class="title"><span class="statusDot"></span>Release Notes</div>
-          <div class="tag">versions.json</div>
-        </div>
-
-        <div style="padding:14px;">
-          <!-- Controls -->
-			<div class="rnControls">
-				<div class="muted mono rnLabel">Release</div>
-				<div class="selectWrap">
-					<select id="majorSelect"></select>
-				</div>
-
-				<div class="muted mono rnLabel">Version</div>
-				<div class="selectWrap">
-					<select id="versionSelect"></select>
-				</div>
+	<div class="grid">
+		<section class="card span2">
+			<div class="head">
+				<div class="title"><span class="statusDot" style="background: rgb(0, 255, 255);"></span>Release Notes</div>
+				<div class="tag">versions.json</div>
 			</div>
 
-			<!-- Notes -->
-			<div class="footer" style="margin-top:0;" id="releaseNotesBody">
-				Loading release notes…
+			<div style="padding:14px;">
+				<div class="rnControls">
+					<div class="muted mono rnLabel">Release</div>
+					<div class="selectWrap">
+						<select id="majorSelect"></select>
+					</div>
+
+					<div class="muted mono rnLabel">Version</div>
+					<div class="selectWrap">
+						<select id="versionSelect"></select>
+					</div>
+				</div>
+
+				<div class="footer" style="margin-top:0;" id="releaseNotesBody">
+					Loading release notes…
+				</div>
 			</div>
-        </div>
-      </section>
+		</section>
+
+		<section class="card span2">
+				<div class="head">
+					<div class="title"><span class="statusDot warn"></span>Known Bugs</div>
+					<div class="tag">bugs.json</div>
+				</div>
+
+				<div class="fadeWrap fadeScroll" id="bugsFade">
+					<div class="tableScroll" id="bugsScroll">
+						<table>
+							<thead>
+								<tr>
+								<th style="width:24%">Status</th>
+								<th>Bug</th>
+								<!-- <th style="width:18%">Info</th> -->
+									<th>Info</th>
+								</tr>
+							</thead>
+							<tbody id="bugsBody"></tbody>
+						</table>
+					</div>
+				</div>
+		</section>
+
+		<section class="card span2">
+			<div class="head">
+				<div class="title"><span class="statusDot"></span>Credits & Platforms</div>
+				<div class="tag">LINKS</div>
+			</div>
+
+			<div style="padding:14px;">
+				<div class="footer" style="margin-top:0;">
+					<span class="platformLinks hScroll fadeScroll" id="platformLinks"></span>
+				</div>
+			</div>
+		</section>
     </div>
 
-    <div class="footer">
-      <button id="hardRefreshBtn" type="button" title="Refresh">↻</button>
-      <code class="inline" id="versionCode">v—</code>
-    </div>
+	<!-- Footer -->
+    <div class="cornerRefresh">
+		<button id="hardRefreshBtn" type="button" title="Refresh">↻</button>
+	</div>
+
+	<div class="footer">
+		<code class="inline" id="versionCode">v—</code>
+	</div>
 
     <div class="tabsBar">
-      <nav class="tabs">
-        <a class="tabBtn" data-tab="timers" href="../../"><span class="tabDot"></span> Timers</a>
-        <a class="tabBtn active" data-tab="about" href="./"><span class="tabDot"></span> About</a>
-        <a class="tabBtn" data-tab="settings" href="../settings/"><span class="tabDot"></span> Settings</a>
-      </nav>
+      	<nav class="tabs">
+			<a class="tabBtn" data-tab="timers" href="../../"><span class="tabDot"></span> Timers</a>
+			<a class="tabBtn active" data-tab="about" href="./"><span class="tabDot"></span> About</a>
+			<a class="tabBtn" data-tab="settings" href="../settings/"><span class="tabDot"></span> Settings</a>
+      	</nav>
     </div>
-  </div>
+</div>
 
   <script type="module">
     import {

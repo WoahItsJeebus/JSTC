@@ -18,113 +18,111 @@
 <body>
   <div class="wrap">
     <header>
-		<div>
-			<h1>Skate. Reset Timers</h1>
-			<div class="sub">
-				Reset rules are defined in <code class="inline">America/Chicago</code>:
-				daily at <code class="inline">12:00</code>, weekly on <code class="inline">Tuesday 12PM CST</code>.
-				The “Next (Local)” column shows the device timezone; the “Next (UTC)” column is the anchor reference.
-			</div>
-		</div>
+      <div>
+        <h1>Skate. Reset Timers</h1>
+        <div class="sub">
+          Reset rules are defined in <code class="inline">America/Chicago</code>:
+          daily at <code class="inline">12:00</code>, weekly on <code class="inline">Tuesday 12PM CST</code>.
+          The “Next (Local)” column shows the device timezone; the “Next (UTC)” column is the anchor reference.
+        </div>
+      </div>
 
-		<!-- Toolbar: scrolls on narrow screens + fades only when overflow exists -->
-		<div class="toolbar hScroll fadeScroll" id="toolbarScroll">
-			<div class="pill" id="nowPill">Now: —</div>
-			<div class="pill" id="localTzPill">Local TZ: —</div>
-			<div class="pill" id="resetTzPill">Reset TZ: —</div>
-		</div>
-	</header>
+      <!-- Toolbar: scrolls on narrow screens + fades only when overflow exists -->
+      <div class="toolbar hScroll fadeScroll" id="toolbarScroll">
+		  <div class="pill" id="nowPill">Now: —</div>
+		  <div class="pill" id="localTzPill">Local TZ: —</div>
+		  <div class="pill" id="resetTzPill">Reset TZ: —</div>
+      </div>
+    </header>
 
-	<div class="grid">
-		<section class="card">
-			<div class="head">
-				<div class="title"><span class="statusDot" id="dailyDot"></span>Daily</div>
-				<div class="tag">COUNTDOWN</div>
-			</div>
+    <div class="grid">
+      <section class="card">
+        <div class="head">
+          <div class="title"><span class="statusDot" id="dailyDot"></span>Daily</div>
+          <div class="tag">COUNTDOWN</div>
+        </div>
 
-			<!-- Table scroll + fades only when overflow exists -->
-			<div class="fadeWrap fadeScroll" id="dailyFade">
-				<div class="tableScroll" id="dailyScroll">
-					<table>
-						<thead>
-						<tr>
-							<th style="width:28%">Timer</th>
-							<th style="width:24%">Next (Local)</th>
-							<th style="width:24%">Next (UTC)</th>
-							<th style="width:24%">Remaining</th>
-						</tr>
-						</thead>
-						<tbody id="dailyBody"></tbody>
-					</table>
-				</div>
-			</div>
-		</section>
-
-		<section class="card">
-			<div class="head">
-			<div class="title"><span class="statusDot" id="weeklyDot"></span>Weekly</div>
-			<div class="tag">COUNTDOWN</div>
-			</div>
-
-			<!-- Table scroll + fades only when overflow exists -->
-			<div class="fadeWrap fadeScroll" id="weeklyFade">
-				<div class="tableScroll" id="weeklyScroll">
-					<table>
-						<thead>
-						<tr>
-							<th style="width:28%">Timer</th>
-							<th style="width:24%">Next (Local)</th>
-							<th style="width:24%">Next (UTC)</th>
-							<th style="width:24%">Remaining</th>
-						</tr>
-						</thead>
-						<tbody id="weeklyBody"></tbody>
-					</table>
-			</div>
-			</div>
-		</section>
-
-		<section class="card span2" id="tempSection">
-			<div class="head">
-			<div class="title"><span class="statusDot off" id="tempDot"></span>Temporary</div>
-			<div class="tag">COUNTDOWN</div>
-			</div>
-
-			<!-- Table scroll + fades only when overflow exists -->
-			<div class="fadeWrap fadeScroll" id="tempFade">
-			<div class="tableScroll" id="tempScroll">
+        <!-- Table scroll + fades only when overflow exists -->
+        <div class="fadeWrap fadeScroll" id="dailyFade">
+  			<div class="tableScroll" id="dailyScroll">
 				<table>
-				<thead>
-				<tr>
-					<th style="width:28%">Timer</th>
-					<th style="width:24%">End (Local)</th>
-					<th style="width:24%">End (UTC)</th>
-					<th style="width:24%">Remaining</th>
-				</tr>
-				</thead>
-				<tbody id="tempBody"></tbody>
+					<thead>
+					<tr>
+						<th style="width:28%">Timer</th>
+						<th style="width:24%">Next (Local)</th>
+						<th style="width:24%">Next (UTC)</th>
+						<th style="width:24%">Remaining</th>
+					</tr>
+					</thead>
+					<tbody id="dailyBody"></tbody>
 				</table>
 			</div>
-			</div>
-		</section>
-	</div>
+        </div>
+      </section>
 
-	<div class="cornerRefresh">
-		<button id="hardRefreshBtn" type="button" title="Refresh">↻</button>
-	</div>
+      <section class="card">
+        <div class="head">
+          <div class="title"><span class="statusDot" id="weeklyDot"></span>Weekly</div>
+          <div class="tag">COUNTDOWN</div>
+        </div>
+
+        <!-- Table scroll + fades only when overflow exists -->
+        <div class="fadeWrap fadeScroll" id="weeklyFade">
+  			<div class="tableScroll" id="weeklyScroll">
+				<table>
+					<thead>
+					<tr>
+						<th style="width:28%">Timer</th>
+						<th style="width:24%">Next (Local)</th>
+						<th style="width:24%">Next (UTC)</th>
+						<th style="width:24%">Remaining</th>
+					</tr>
+					</thead>
+					<tbody id="weeklyBody"></tbody>
+				</table>
+		  </div>
+        </div>
+      </section>
+
+      <section class="card span2" id="tempSection">
+        <div class="head">
+          <div class="title"><span class="statusDot off" id="tempDot"></span>Temporary</div>
+          <div class="tag">COUNTDOWN</div>
+        </div>
+
+        <!-- Table scroll + fades only when overflow exists -->
+        <div class="fadeWrap fadeScroll" id="tempFade">
+          <div class="tableScroll" id="tempScroll">
+            <table>
+              <thead>
+              <tr>
+                <th style="width:28%">Timer</th>
+                <th style="width:24%">End (Local)</th>
+                <th style="width:24%">End (UTC)</th>
+                <th style="width:24%">Remaining</th>
+              </tr>
+              </thead>
+              <tbody id="tempBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
 
 	<div class="footer">
+		<button id="hardRefreshBtn" type="button" title="Refresh">↻</button>
 		<code class="inline" id="versionCode">v—</code>
 	</div>
 
 	<div class="tabsBar">
-		<nav class="tabs" style="align-items: center;">
+		<nav class="tabs">
 			<a class="tabBtn active" data-tab="timers" href="./"><span class="tabDot"></span> Timers</a>
 			<a class="tabBtn" data-tab="about" href="./pages/about/"><span class="tabDot"></span> About</a>
 			<a class="tabBtn" data-tab="settings" href="./pages/settings/"><span class="tabDot"></span> Settings</a>
 		</nav>
 	</div>
-</div>
+  </div>
 
 <script>
 
@@ -181,36 +179,36 @@ const tempSection  = document.getElementById("tempSection");
 
 function pad2(n){ return String(n).padStart(2, "0"); }
 function escapeHtml(s){
-	return String(s).replace(/[&<>"']/g, c => ({
-		"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
-	}[c]));
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  }[c]));
 }
 
 function parseTime(s){
-	const parts = String(s||"").trim().split(":");
-	if (parts.length < 2 || parts.length > 3) return null;
-	const h = Number(parts[0]), m = Number(parts[1]), sec = parts.length === 3 ? Number(parts[2]) : 0;
-	if (![h,m,sec].every(Number.isFinite)) return null;
-	if (h<0||h>23||m<0||m>59||sec<0||sec>59) return null;
-	return {h,m,sec};
+  const parts = String(s||"").trim().split(":");
+  if (parts.length < 2 || parts.length > 3) return null;
+  const h = Number(parts[0]), m = Number(parts[1]), sec = parts.length === 3 ? Number(parts[2]) : 0;
+  if (![h,m,sec].every(Number.isFinite)) return null;
+  if (h<0||h>23||m<0||m>59||sec<0||sec>59) return null;
+  return {h,m,sec};
 }
 
 function formatDuration(totalSec){
-	totalSec = Math.max(0, Math.floor(totalSec));
-	const days = Math.floor(totalSec / 86400);
-	totalSec %= 86400;
-	const hrs = Math.floor(totalSec / 3600);
-	totalSec %= 3600;
-	const mins = Math.floor(totalSec / 60);
-	const secs = totalSec % 60;
-	if (days > 0) return `${days}d ${pad2(hrs)}h ${pad2(mins)}m ${pad2(secs)}s`;
-	return `${pad2(hrs)}h ${pad2(mins)}m ${pad2(secs)}s`;
+  totalSec = Math.max(0, Math.floor(totalSec));
+  const days = Math.floor(totalSec / 86400);
+  totalSec %= 86400;
+  const hrs = Math.floor(totalSec / 3600);
+  totalSec %= 3600;
+  const mins = Math.floor(totalSec / 60);
+  const secs = totalSec % 60;
+  if (days > 0) return `${days}d ${pad2(hrs)}h ${pad2(mins)}m ${pad2(secs)}s`;
+  return `${pad2(hrs)}h ${pad2(mins)}m ${pad2(secs)}s`;
 }
 
 function urgencyDot(dotEl, minRemaining){
-	dotEl.classList.remove("warn","bad");
-	if (minRemaining <= 300) dotEl.classList.add("bad");        // <= 5 min
-	else if (minRemaining <= 3600) dotEl.classList.add("warn"); // <= 1 hour
+  dotEl.classList.remove("warn","bad");
+  if (minRemaining <= 300) dotEl.classList.add("bad");        // <= 5 min
+  else if (minRemaining <= 3600) dotEl.classList.add("warn"); // <= 1 hour
 }
 
 /**
@@ -230,132 +228,132 @@ function getZonedParts(dateUtc, timeZone){
 	for (const p of parts){
 		if (p.type !== "literal") map[p.type] = p.value;
 	}
-	const wdMap = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
-	return {
-		year: Number(map.year),
-		month: Number(map.month),
-		day: Number(map.day),
-		hour: Number(map.hour),
-		minute: Number(map.minute),
-		second: Number(map.second),
-		weekday: wdMap[map.weekday] ?? 0,
-	};
+  const wdMap = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+  return {
+    year: Number(map.year),
+    month: Number(map.month),
+    day: Number(map.day),
+    hour: Number(map.hour),
+    minute: Number(map.minute),
+    second: Number(map.second),
+    weekday: wdMap[map.weekday] ?? 0,
+  };
 }
 
 function tzOffsetMinutes(dateUtc, timeZone){
-	const z = getZonedParts(dateUtc, timeZone);
-	const asIfUtc = Date.UTC(z.year, z.month-1, z.day, z.hour, z.minute, z.second);
-	return (asIfUtc - dateUtc.getTime()) / 60000;
+  const z = getZonedParts(dateUtc, timeZone);
+  const asIfUtc = Date.UTC(z.year, z.month-1, z.day, z.hour, z.minute, z.second);
+  return (asIfUtc - dateUtc.getTime()) / 60000;
 }
 
 function wallToUtcDate(y, m, d, h, mi, s, timeZone){
-	const naiveUtcMs = Date.UTC(y, m-1, d, h, mi, s);
-	let guess = new Date(naiveUtcMs);
-	let off1 = tzOffsetMinutes(guess, timeZone);
-	let utcMs1 = naiveUtcMs - off1 * 60000;
+  const naiveUtcMs = Date.UTC(y, m-1, d, h, mi, s);
+  let guess = new Date(naiveUtcMs);
+  let off1 = tzOffsetMinutes(guess, timeZone);
+  let utcMs1 = naiveUtcMs - off1 * 60000;
 
-	guess = new Date(utcMs1);
-	let off2 = tzOffsetMinutes(guess, timeZone);
-	let utcMs2 = naiveUtcMs - off2 * 60000;
+  guess = new Date(utcMs1);
+  let off2 = tzOffsetMinutes(guess, timeZone);
+  let utcMs2 = naiveUtcMs - off2 * 60000;
 
-	return new Date(utcMs2);
+  return new Date(utcMs2);
 }
 
 function addDaysToYMD(y, m, d, days){
-	const base = new Date(Date.UTC(y, m-1, d, 0, 0, 0));
-	base.setUTCDate(base.getUTCDate() + days);
-	return { y: base.getUTCFullYear(), m: base.getUTCMonth()+1, d: base.getUTCDate() };
+  const base = new Date(Date.UTC(y, m-1, d, 0, 0, 0));
+  base.setUTCDate(base.getUTCDate() + days);
+  return { y: base.getUTCFullYear(), m: base.getUTCMonth()+1, d: base.getUTCDate() };
 }
 
 function fmtInTZ(dateUtc, timeZone){
-	const z = getZonedParts(dateUtc, timeZone);
-	return `${z.year}-${pad2(z.month)}-${pad2(z.day)} ${pad2(z.hour)}:${pad2(z.minute)}:${pad2(z.second)}`;
+  const z = getZonedParts(dateUtc, timeZone);
+  return `${z.year}-${pad2(z.month)}-${pad2(z.day)} ${pad2(z.hour)}:${pad2(z.minute)}:${pad2(z.second)}`;
 }
 
 function fmtLocal(dateUtc){
-	if (LOCAL_TZ && LOCAL_TZ !== "Local") return fmtInTZ(dateUtc, LOCAL_TZ);
-	return `${dateUtc.getFullYear()}-${pad2(dateUtc.getMonth()+1)}-${pad2(dateUtc.getDate())} `
-		+ `${pad2(dateUtc.getHours())}:${pad2(dateUtc.getMinutes())}:${pad2(dateUtc.getSeconds())}`;
+  if (LOCAL_TZ && LOCAL_TZ !== "Local") return fmtInTZ(dateUtc, LOCAL_TZ);
+  return `${dateUtc.getFullYear()}-${pad2(dateUtc.getMonth()+1)}-${pad2(dateUtc.getDate())} `
+       + `${pad2(dateUtc.getHours())}:${pad2(dateUtc.getMinutes())}:${pad2(dateUtc.getSeconds())}`;
 }
 
 function fmtUtc(dateUtc){
-	return `${dateUtc.getUTCFullYear()}-${pad2(dateUtc.getUTCMonth()+1)}-${pad2(dateUtc.getUTCDate())} `
-		+ `${pad2(dateUtc.getUTCHours())}:${pad2(dateUtc.getUTCMinutes())}:${pad2(dateUtc.getUTCSeconds())}`;
+  return `${dateUtc.getUTCFullYear()}-${pad2(dateUtc.getUTCMonth()+1)}-${pad2(dateUtc.getUTCDate())} `
+       + `${pad2(dateUtc.getUTCHours())}:${pad2(dateUtc.getUTCMinutes())}:${pad2(dateUtc.getUTCSeconds())}`;
 }
 
 function compareWallTimeToTarget(nowZ, tm){
-	if (nowZ.hour !== tm.h) return nowZ.hour < tm.h ? -1 : 1;
-	if (nowZ.minute !== tm.m) return nowZ.minute < tm.m ? -1 : 1;
-	if (nowZ.second !== tm.sec) return nowZ.second < tm.sec ? -1 : 1;
-	return 0;
+  if (nowZ.hour !== tm.h) return nowZ.hour < tm.h ? -1 : 1;
+  if (nowZ.minute !== tm.m) return nowZ.minute < tm.m ? -1 : 1;
+  if (nowZ.second !== tm.sec) return nowZ.second < tm.sec ? -1 : 1;
+  return 0;
 }
 
 function nextDailyAnchored(nowUtc, timeObj){
-	const nowZ = getZonedParts(nowUtc, RESET_TZ);
-	let targetY = nowZ.year, targetM = nowZ.month, targetD = nowZ.day;
+  const nowZ = getZonedParts(nowUtc, RESET_TZ);
+  let targetY = nowZ.year, targetM = nowZ.month, targetD = nowZ.day;
 
-	if (compareWallTimeToTarget(nowZ, timeObj) >= 0){
-		const nxt = addDaysToYMD(targetY, targetM, targetD, 1);
-		targetY = nxt.y; targetM = nxt.m; targetD = nxt.d;
-	}
+  if (compareWallTimeToTarget(nowZ, timeObj) >= 0){
+    const nxt = addDaysToYMD(targetY, targetM, targetD, 1);
+    targetY = nxt.y; targetM = nxt.m; targetD = nxt.d;
+  }
 
-	return wallToUtcDate(targetY, targetM, targetD, timeObj.h, timeObj.m, timeObj.sec, RESET_TZ);
+  return wallToUtcDate(targetY, targetM, targetD, timeObj.h, timeObj.m, timeObj.sec, RESET_TZ);
 }
 
 function nextWeeklyAnchored(nowUtc, targetWeekday, timeObj){
-	const nowZ = getZonedParts(nowUtc, RESET_TZ);
-	let daysUntil = (targetWeekday - nowZ.weekday + 7) % 7;
+  const nowZ = getZonedParts(nowUtc, RESET_TZ);
+  let daysUntil = (targetWeekday - nowZ.weekday + 7) % 7;
 
-	if (daysUntil === 0 && compareWallTimeToTarget(nowZ, timeObj) >= 0){
-		daysUntil = 7;
-	}
+  if (daysUntil === 0 && compareWallTimeToTarget(nowZ, timeObj) >= 0){
+    daysUntil = 7;
+  }
 
-	const tgt = addDaysToYMD(nowZ.year, nowZ.month, nowZ.day, daysUntil);
-	return wallToUtcDate(tgt.y, tgt.m, tgt.d, timeObj.h, timeObj.m, timeObj.sec, RESET_TZ);
+  const tgt = addDaysToYMD(nowZ.year, nowZ.month, nowZ.day, daysUntil);
+  return wallToUtcDate(tgt.y, tgt.m, tgt.d, timeObj.h, timeObj.m, timeObj.sec, RESET_TZ);
 }
 
 function addRowTo(bodyEl, name, colLocal, colUtc, remainStr, trClass = ""){
-	const tr = document.createElement("tr");
-	if (trClass) tr.className = trClass;
-	tr.innerHTML = `
-		<td>${escapeHtml(name)}</td>
-		<td class="mono muted">${escapeHtml(colLocal)}</td>
-		<td class="mono muted">${escapeHtml(colUtc)}</td>
-		<td class="mono muted">${escapeHtml(remainStr)}</td>
-	`;
-	bodyEl.appendChild(tr);
+  const tr = document.createElement("tr");
+  if (trClass) tr.className = trClass;
+  tr.innerHTML = `
+    <td>${escapeHtml(name)}</td>
+    <td class="mono muted">${escapeHtml(colLocal)}</td>
+    <td class="mono muted">${escapeHtml(colUtc)}</td>
+    <td class="mono muted">${escapeHtml(remainStr)}</td>
+  `;
+  bodyEl.appendChild(tr);
 }
 
 function setTempDotState(dotEl, hasActive, minRemaining){
-	dotEl.classList.remove("warn","bad","off");
-	if (!hasActive){
-		dotEl.classList.add("off");
-		return;
-	}
-	urgencyDot(dotEl, minRemaining);
+  dotEl.classList.remove("warn","bad","off");
+  if (!hasActive){
+    dotEl.classList.add("off");
+    return;
+  }
+  urgencyDot(dotEl, minRemaining);
 }
 
 function parseWallDateTime(s){
-	const m = String(s||"").trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?$/);
-	if (!m) return null;
-	const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
-	const h = Number(m[4] ?? 0), mi = Number(m[5] ?? 0), sec = Number(m[6] ?? 0);
-	if (![y,mo,d,h,mi,sec].every(Number.isFinite)) return null;
-	if (mo<1||mo>12||d<1||d>31||h<0||h>23||mi<0||mi>59||sec<0||sec>59) return null;
-	return { y, mo, d, h, mi, sec };
+  const m = String(s||"").trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?$/);
+  if (!m) return null;
+  const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+  const h = Number(m[4] ?? 0), mi = Number(m[5] ?? 0), sec = Number(m[6] ?? 0);
+  if (![y,mo,d,h,mi,sec].every(Number.isFinite)) return null;
+  if (mo<1||mo>12||d<1||d>31||h<0||h>23||mi<0||mi>59||sec<0||sec>59) return null;
+  return { y, mo, d, h, mi, sec };
 }
 
 function tempEndUtcDate(timer){
-	if (timer?.endUtc){
-		const dt = new Date(timer.endUtc);
-		if (!Number.isFinite(dt.getTime())) return null;
-		return dt;
-	}
+  if (timer?.endUtc){
+    const dt = new Date(timer.endUtc);
+    if (!Number.isFinite(dt.getTime())) return null;
+    return dt;
+  }
 
-	const parts = parseWallDateTime(timer?.end);
-	if (!parts) return null;
-	const tz = timer?.tz || RESET_TZ;
-	return wallToUtcDate(parts.y, parts.mo, parts.d, parts.h, parts.mi, parts.sec, tz);
+  const parts = parseWallDateTime(timer?.end);
+  if (!parts) return null;
+  const tz = timer?.tz || RESET_TZ;
+  return wallToUtcDate(parts.y, parts.mo, parts.d, parts.h, parts.mi, parts.sec, tz);
 }
 
 function render(){
