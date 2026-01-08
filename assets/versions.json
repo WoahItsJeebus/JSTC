@@ -111,6 +111,11 @@
 		],
 		"1.4.10": [
 			"Removed refresh button and pinned tabs bar. (Switching tabs or selecting your current tab in the list will achieve the same result.)"
+		],
+		"1.4.11": [
+			"Adjusted tabs container size.",
+			"Added lower padding to the page for tab bar space.",
+			"Removed underlining from each tab button."
 		]
 	}
 }

@@ -10,7 +10,7 @@
 
 
 let __orbBgStop = null;
-export const JSTC_VERSION = "1.4.10";
+export const JSTC_VERSION = "1.4.11";
 
 export function startOrbBackground(opts = {}) {
 	const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
@@ -805,3 +805,18 @@ export function autoMarkActiveTab(pageKey) {
 		a.classList.toggle("active", k === key);
 	});
 }
+
+(function () {
+  function updateTabsDockPad() {
+    const pill = document.querySelector(".tabsBar .tabs");
+    if (!pill) return;
+
+    const h = Math.ceil(pill.getBoundingClientRect().height);
+
+    // pill height + bottom offset (12px) + a little breathing room (12px)
+    document.documentElement.style.setProperty("--tabsDockPad", `${h + 24}px`);
+  }
+
+  window.addEventListener("resize", updateTabsDockPad, { passive: true });
+  updateTabsDockPad();
+})();
