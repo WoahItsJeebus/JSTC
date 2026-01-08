@@ -6,7 +6,7 @@
  *
  * Orb Handler
  *
-*/
+ */
 
 
 let __orbBgStop = null;
@@ -14,7 +14,9 @@ export const JSTC_VERSION = "1.4.9";
 
 export function startOrbBackground(opts = {}) {
 	const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-	if (reduce) return { stop() {} };
+	if (reduce) return {
+		stop() {}
+	};
 
 	// Idempotent: restart cleanly
 	if (typeof __orbBgStop === "function") __orbBgStop();
@@ -39,7 +41,10 @@ export function startOrbBackground(opts = {}) {
 		animateBlur: false,
 
 		margin: 0.12,
-		opacity: { min: 0.35, max: 0.6 },
+		opacity: {
+			min: 0.35,
+			max: 0.6
+		},
 		colors: ["#20493f", "#306459", "#2f5e7e"],
 		...opts,
 	};
@@ -65,7 +70,7 @@ export function startOrbBackground(opts = {}) {
 
 		// Expand #RGB/#RGBA -> #RRGGBB/#RRGGBBAA
 		if (s.length === 3 || s.length === 4) {
-		s = s.split("").map((ch) => ch + ch).join("");
+			s = s.split("").map((ch) => ch + ch).join("");
 		}
 
 		if (!/^[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(s)) {
@@ -88,13 +93,13 @@ export function startOrbBackground(opts = {}) {
 		if (typeof op === "number") return clamp01(op);
 
 		if (Array.isArray(op) && op.length >= 2) {
-		return clamp01(rand(op[0], op[1]));
+			return clamp01(rand(op[0], op[1]));
 		}
 
 		if (op && typeof op === "object") {
-		const min = typeof op.min === "number" ? op.min : 0.2;
-		const max = typeof op.max === "number" ? op.max : min;
-		return clamp01(rand(min, max));
+			const min = typeof op.min === "number" ? op.min : 0.2;
+			const max = typeof op.max === "number" ? op.max : min;
+			return clamp01(rand(min, max));
 		}
 
 		return 0.2; // fallback
@@ -149,8 +154,10 @@ export function startOrbBackground(opts = {}) {
 			s,
 			dur,
 			blur,
-			x, y,
-			dx, dy,
+			x,
+			y,
+			dx,
+			dy,
 			rgb: `${r},${g},${b}`,
 			a: `${finalOpacity}`,
 		};
@@ -246,7 +253,10 @@ export function startOrbBackground(opts = {}) {
 
 		// Cancel any previous animations on this handle
 		handle.anims.forEach((x) => {
-			try { x.cancel(); } catch {}
+			try {
+				x.cancel();
+			}
+			catch {}
 		});
 		handle.anims.length = 0;
 
@@ -259,16 +269,14 @@ export function startOrbBackground(opts = {}) {
 		}
 
 		const parentAnim = el.animate(
-			[
-				{
+			[{
 					opacity: isFirst ? 0 : 0.7,
 					transform: driftTransform(from, 0.0, 1.02),
 				},
 				{
 					offset: 0.25,
 					opacity: 0.88,
-					transform: driftTransform(
-						{
+					transform: driftTransform({
 							...from,
 							x: lerp(from.x, to.x, 0.25),
 							y: lerp(from.y, to.y, 0.25),
@@ -283,8 +291,7 @@ export function startOrbBackground(opts = {}) {
 				{
 					offset: 0.85,
 					opacity: 0.74,
-					transform: driftTransform(
-						{
+					transform: driftTransform({
 							...from,
 							x: lerp(from.x, to.x, 0.85),
 							y: lerp(from.y, to.y, 0.85),
@@ -300,18 +307,29 @@ export function startOrbBackground(opts = {}) {
 					opacity: 0.7,
 					transform: driftTransform(to, 1.0, 1.03),
 				},
-			],
-			{ duration: dur, easing: "ease-in-out", fill: "forwards" }
+			], {
+				duration: dur,
+				easing: "ease-in-out",
+				fill: "forwards"
+			}
 		);
 
 
 		// Crossfade gradients (this is the "morph into each other" part)
-		const fadeOut = a0.animate([{ opacity: 1 }, { opacity: 0 }], {
+		const fadeOut = a0.animate([{
+			opacity: 1
+		}, {
+			opacity: 0
+		}], {
 			duration: fadeDur,
 			easing: "ease-in-out",
 			fill: "forwards",
 		});
-		const fadeIn = a1.animate([{ opacity: 0 }, { opacity: 1 }], {
+		const fadeIn = a1.animate([{
+			opacity: 0
+		}, {
+			opacity: 1
+		}], {
 			duration: fadeDur,
 			easing: "ease-in-out",
 			fill: "forwards",
@@ -320,27 +338,27 @@ export function startOrbBackground(opts = {}) {
 		handle.anims.push(parentAnim, fadeOut, fadeIn);
 
 		parentAnim.finished
-		.catch(() => {}) // canceled on stop/restart
-		.then(() => {
-			if (stopped) return;
-			
-			// Snap final styles so next cycle starts cleanly
-			if (!cfg.animateBlur) el.style.filter = `blur(${to.blur}px)`;
-			el.style.opacity = "0.7";
-			el.style.transform = driftTransform(to, 1.0, 1.03);
+			.catch(() => {}) // canceled on stop/restart
+			.then(() => {
+				if (stopped) return;
 
-			// Make the "to" layer the new active
-			handle.activeIndex = 1 - handle.activeIndex;
-			handle.spec = to;
+				// Snap final styles so next cycle starts cleanly
+				if (!cfg.animateBlur) el.style.filter = `blur(${to.blur}px)`;
+				el.style.opacity = "0.7";
+				el.style.transform = driftTransform(to, 1.0, 1.03);
 
-			const nowActive = handle.layers[handle.activeIndex];
-			const nowInactive = handle.layers[1 - handle.activeIndex];
-			nowActive.style.opacity = "1";
-			nowInactive.style.opacity = "0";
+				// Make the "to" layer the new active
+				handle.activeIndex = 1 - handle.activeIndex;
+				handle.spec = to;
 
-			// Small random pause keeps it organic without stacking
-			later(randi(120, 420), () => animateOrb(handle, false));
-		});
+				const nowActive = handle.layers[handle.activeIndex];
+				const nowInactive = handle.layers[1 - handle.activeIndex];
+				nowActive.style.opacity = "1";
+				nowInactive.style.opacity = "0";
+
+				// Small random pause keeps it organic without stacking
+				later(randi(120, 420), () => animateOrb(handle, false));
+			});
 	}
 
 	// Build a fixed pool (no more spawn/remove/layering)
@@ -353,11 +371,11 @@ export function startOrbBackground(opts = {}) {
 		const orb = document.createElement("div");
 		orb.className = "bgOrb";
 		orb.style.willChange = "transform, opacity";
-		
+
 		const layerA = document.createElement("div");
 		layerA.className = "bgOrbLayer";
 		layerA.style.willChange = "opacity";
-		
+
 		const layerB = document.createElement("div");
 		layerB.className = "bgOrbLayer";
 		layerB.style.willChange = "opacity";
@@ -391,7 +409,9 @@ export function startOrbBackground(opts = {}) {
 		later(i * cfg.spawnEveryMs, () => animateOrb(h, true));
 	});
 
-	function stop({ removeLayer = false } = {}) {
+	function stop({
+		removeLayer = false
+	} = {}) {
 		if (stopped) return;
 		stopped = true;
 
@@ -402,7 +422,10 @@ export function startOrbBackground(opts = {}) {
 		// Cancel animations + clear DOM
 		for (const h of handles) {
 			h.anims.forEach((x) => {
-				try { x.cancel(); } catch {}
+				try {
+					x.cancel();
+				}
+				catch {}
 			});
 			h.anims.length = 0;
 		}
@@ -415,16 +438,18 @@ export function startOrbBackground(opts = {}) {
 			}
 		}
 	}
-		__orbBgStop = stop;
-		return { stop };
-	}
+	__orbBgStop = stop;
+	return {
+		stop
+	};
+}
 
-export function hardReload(){
-  // Force a re-request by changing the URL query.
-  // Works better than location.reload(true) (deprecated) and helps iOS PWA caching.
-  const url = new URL(location.href);
-  url.searchParams.set("_r", String(Date.now()));
-  location.replace(url.toString());
+export function hardReload() {
+	// Force a re-request by changing the URL query.
+	// Works better than location.reload(true) (deprecated) and helps iOS PWA caching.
+	const url = new URL(location.href);
+	url.searchParams.set("_r", String(Date.now()));
+	location.replace(url.toString());
 }
 
 /* ============================================================
@@ -434,104 +459,118 @@ export function hardReload(){
 export const JSTC_SETTINGS_KEY = "JSTC_SETTINGS_v1";
 
 export function getDefaultAppSettings() {
-  return {
-    version: 1,
+	return {
+		version: 1,
 
-    // Theme vars map directly to CSS vars
-    themeVars: {
-      bg: "#0b0f17",
-      card: "#121a2a",
-      text: "#e7edf7",
-      muted: "#a9b4c7",
-      border: "rgba(255,255,255,.08)",
-      good: "#3ddc97",
-      warn: "#ffcc66",
-      bad: "#ff6b6b",
-    },
+		// Theme vars map directly to CSS vars
+		themeVars: {
+			bg: "#0b0f17",
+			card: "#121a2a",
+			text: "#e7edf7",
+			muted: "#a9b4c7",
+			border: "rgba(255,255,255,.08)",
+			good: "#3ddc97",
+			warn: "#ffcc66",
+			bad: "#ff6b6b",
+		},
 
-    // Orbs (merged into startOrbBackground options)
-    orbs: {
-      enabled: true,
-      maxOrbs: 3,
-      opacity: { min: 0.5, max: 0.7 },
-      colors: ["#20493f", "#306459", "#2f5e7e"],
-    },
+		// Orbs (merged into startOrbBackground options)
+		orbs: {
+			enabled: true,
+			maxOrbs: 3,
+			opacity: {
+				min: 0.5,
+				max: 0.7
+			},
+			colors: ["#20493f", "#306459", "#2f5e7e"],
+		},
 
-    // Extra hard “off” switch
-    reduceMotion: false,
-  };
+		// Extra hard “off” switch
+		reduceMotion: false,
+	};
 }
 
 function _safeParseJson(raw) {
-  try {
-    const v = JSON.parse(raw);
-    return v && typeof v === "object" ? v : null;
-  } catch {
-    return null;
-  }
+	try {
+		const v = JSON.parse(raw);
+		return v && typeof v === "object" ? v : null;
+	}
+	catch {
+		return null;
+	}
 }
 
 export function loadAppSettings(defaults = getDefaultAppSettings()) {
-  try {
-    const raw = localStorage.getItem(JSTC_SETTINGS_KEY);
-    if (!raw) return structuredClone(defaults);
+	try {
+		const raw = localStorage.getItem(JSTC_SETTINGS_KEY);
+		if (!raw) return structuredClone(defaults);
 
-    const parsed = _safeParseJson(raw);
-    if (!parsed) return structuredClone(defaults);
+		const parsed = _safeParseJson(raw);
+		if (!parsed) return structuredClone(defaults);
 
-    // Shallow merge is fine since we control shape
-    const merged = structuredClone(defaults);
-    if (parsed.themeVars && typeof parsed.themeVars === "object") {
-      merged.themeVars = { ...merged.themeVars, ...parsed.themeVars };
-    }
-    if (parsed.orbs && typeof parsed.orbs === "object") {
-      merged.orbs = { ...merged.orbs, ...parsed.orbs };
-    }
-    if (typeof parsed.reduceMotion === "boolean") merged.reduceMotion = parsed.reduceMotion;
+		// Shallow merge is fine since we control shape
+		const merged = structuredClone(defaults);
+		if (parsed.themeVars && typeof parsed.themeVars === "object") {
+			merged.themeVars = {
+				...merged.themeVars,
+				...parsed.themeVars
+			};
+		}
+		if (parsed.orbs && typeof parsed.orbs === "object") {
+			merged.orbs = {
+				...merged.orbs,
+				...parsed.orbs
+			};
+		}
+		if (typeof parsed.reduceMotion === "boolean") merged.reduceMotion = parsed.reduceMotion;
 
-    return merged;
-  } catch {
-    return structuredClone(defaults);
-  }
+		return merged;
+	}
+	catch {
+		return structuredClone(defaults);
+	}
 }
 
 export function saveAppSettings(settingsObj) {
-  try {
-    localStorage.setItem(JSTC_SETTINGS_KEY, JSON.stringify(settingsObj || {}));
-    return true;
-  } catch {
-    return false;
-  }
+	try {
+		localStorage.setItem(JSTC_SETTINGS_KEY, JSON.stringify(settingsObj || {}));
+		return true;
+	}
+	catch {
+		return false;
+	}
 }
 
 export function applyCssVars(vars) {
-  if (!vars || typeof vars !== "object") return;
-  const root = document.documentElement;
-  for (const [k, v] of Object.entries(vars)) {
-    if (v == null) continue;
-    const key = k.startsWith("--") ? k : `--${k}`;
-    root.style.setProperty(key, String(v));
-  }
+	if (!vars || typeof vars !== "object") return;
+	const root = document.documentElement;
+	for (const [k, v] of Object.entries(vars)) {
+		if (v == null) continue;
+		const key = k.startsWith("--") ? k : `--${k}`;
+		root.style.setProperty(key, String(v));
+	}
 }
 
 export function applyAppSettings(settingsObj) {
-  const s = settingsObj || loadAppSettings();
+	const s = settingsObj || loadAppSettings();
 
-  applyCssVars(s.themeVars);
+	applyCssVars(s.themeVars);
 
-  // If user explicitly disables motion, enforce it
-  document.documentElement.classList.toggle("reduceMotion", !!s.reduceMotion);
+	// If user explicitly disables motion, enforce it
+	document.documentElement.classList.toggle("reduceMotion", !!s.reduceMotion);
 
-  // If reduceMotion is on, we also treat orbs as disabled
-  const orbsEnabled = !!(s.orbs?.enabled) && !s.reduceMotion;
-  document.documentElement.classList.toggle("orbsOff", !orbsEnabled);
+	// If reduceMotion is on, we also treat orbs as disabled
+	const orbsEnabled = !!(s.orbs?.enabled) && !s.reduceMotion;
+	document.documentElement.classList.toggle("orbsOff", !orbsEnabled);
 
-  // If orbs are off, stop any currently running background
-  if (!orbsEnabled && typeof __orbBgStop === "function") {
-    __orbBgStop({ removeLayer: true });
-  }
+	// If orbs are off, stop any currently running background
+	if (!orbsEnabled && typeof __orbBgStop === "function") {
+		__orbBgStop({
+			removeLayer: true
+		});
+	}
 
-  return s;
+	return s;
 }
 
 /**
@@ -540,15 +579,15 @@ export function applyAppSettings(settingsObj) {
  * - listens for changes from other tabs/pages
  */
 export function initAppSettings(defaults = getDefaultAppSettings()) {
-  const s = applyAppSettings(loadAppSettings(defaults));
+	const s = applyAppSettings(loadAppSettings(defaults));
 
-  // Cross-tab/page sync
-  window.addEventListener("storage", (ev) => {
-    if (ev.key !== JSTC_SETTINGS_KEY) return;
-    applyAppSettings(loadAppSettings(defaults));
-  });
+	// Cross-tab/page sync
+	window.addEventListener("storage", (ev) => {
+		if (ev.key !== JSTC_SETTINGS_KEY) return;
+		applyAppSettings(loadAppSettings(defaults));
+	});
 
-  return s;
+	return s;
 }
 
 /**
@@ -556,37 +595,53 @@ export function initAppSettings(defaults = getDefaultAppSettings()) {
  * (Still lets each page pass extra base options.)
  */
 export function startOrbBackgroundFromSettings(baseOpts = {}) {
-  const s = loadAppSettings();
-  s.reduceMotion = !!s.reduceMotion;
+	const s = loadAppSettings();
+	s.reduceMotion = !!s.reduceMotion;
 
-  const orbsEnabled = !!(s.orbs?.enabled) && !s.reduceMotion;
-  if (!orbsEnabled) return { stop() {} };
+	const orbsEnabled = !!(s.orbs?.enabled) && !s.reduceMotion;
+	if (!orbsEnabled) return {
+		stop() {}
+	};
 
-  const opts = { ...baseOpts, ...(s.orbs || {}) };
-  return startOrbBackground(opts);
+	const opts = {
+		...baseOpts,
+		...(s.orbs || {})
+	};
+	return startOrbBackground(opts);
 }
 
 export function exportAppSettingsJson() {
-  return JSON.stringify(loadAppSettings(), null, 2);
+	return JSON.stringify(loadAppSettings(), null, 2);
 }
 
 export function importAppSettingsJson(jsonText) {
-  const parsed = _safeParseJson(String(jsonText || ""));
-  if (!parsed) return { ok: false, error: "Invalid JSON" };
+	const parsed = _safeParseJson(String(jsonText || ""));
+	if (!parsed) return {
+		ok: false,
+		error: "Invalid JSON"
+	};
 
-  // Merge into defaults so missing keys don’t nuke the app
-  const merged = loadAppSettings();
-  if (parsed.themeVars && typeof parsed.themeVars === "object") {
-    merged.themeVars = { ...merged.themeVars, ...parsed.themeVars };
-  }
-  if (parsed.orbs && typeof parsed.orbs === "object") {
-    merged.orbs = { ...merged.orbs, ...parsed.orbs };
-  }
-  if (typeof parsed.reduceMotion === "boolean") merged.reduceMotion = parsed.reduceMotion;
+	// Merge into defaults so missing keys don’t nuke the app
+	const merged = loadAppSettings();
+	if (parsed.themeVars && typeof parsed.themeVars === "object") {
+		merged.themeVars = {
+			...merged.themeVars,
+			...parsed.themeVars
+		};
+	}
+	if (parsed.orbs && typeof parsed.orbs === "object") {
+		merged.orbs = {
+			...merged.orbs,
+			...parsed.orbs
+		};
+	}
+	if (typeof parsed.reduceMotion === "boolean") merged.reduceMotion = parsed.reduceMotion;
 
-  saveAppSettings(merged);
-  applyAppSettings(merged);
-  return { ok: true };
+	saveAppSettings(merged);
+	applyAppSettings(merged);
+	return {
+		ok: true
+	};
 }
 
 /**
@@ -594,79 +649,85 @@ export function importAppSettingsJson(jsonText) {
  * Works with .fadeScroll + .isScrollable/.atStart/.atEnd CSS classes.
  */
 
-export function updateFadeState(el){
-  if (!el) return;
+export function updateFadeState(el) {
+	if (!el) return;
 
-  const max = el.scrollWidth - el.clientWidth;
+	const max = el.scrollWidth - el.clientWidth;
 
-  if (max <= 1){
-    el.classList.remove("isScrollable", "atStart", "atEnd");
-    return;
-  }
+	if (max <= 1) {
+		el.classList.remove("isScrollable", "atStart", "atEnd");
+		return;
+	}
 
-  el.classList.add("isScrollable");
+	el.classList.add("isScrollable");
 
-  if (el.scrollLeft <= 1) el.classList.add("atStart");
-  else el.classList.remove("atStart");
+	if (el.scrollLeft <= 1) el.classList.add("atStart");
+	else el.classList.remove("atStart");
 
-  if (el.scrollLeft >= max - 1) el.classList.add("atEnd");
-  else el.classList.remove("atEnd");
+	if (el.scrollLeft >= max - 1) el.classList.add("atEnd");
+	else el.classList.remove("atEnd");
 }
 
-export function attachFadeScroll(el){
-  if (!el) return;
+export function attachFadeScroll(el) {
+	if (!el) return;
 
-  updateFadeState(el);
+	updateFadeState(el);
 
-  el.addEventListener("scroll", () => updateFadeState(el), { passive:true });
+	el.addEventListener("scroll", () => updateFadeState(el), {
+		passive: true
+	});
 
-  if ("ResizeObserver" in window){
-    const ro = new ResizeObserver(() => updateFadeState(el));
-    ro.observe(el);
-  } else {
-    window.addEventListener("resize", () => updateFadeState(el));
-  }
+	if ("ResizeObserver" in window) {
+		const ro = new ResizeObserver(() => updateFadeState(el));
+		ro.observe(el);
+	}
+	else {
+		window.addEventListener("resize", () => updateFadeState(el));
+	}
 }
 
 /**
  * Attach fades for a list of element IDs (ignores missing).
  */
-export function attachFadeScrollByIds(ids){
-  for (const id of ids){
-    attachFadeScroll(document.getElementById(id));
-  }
+export function attachFadeScrollByIds(ids) {
+	for (const id of ids) {
+		attachFadeScroll(document.getElementById(id));
+	}
 }
 
-export function attachFadeToScroller(scrollerEl, fadeEl){
-  if (!scrollerEl || !fadeEl) return;
+export function attachFadeToScroller(scrollerEl, fadeEl) {
+	if (!scrollerEl || !fadeEl) return;
 
-  function sync(){
-    const max = scrollerEl.scrollWidth - scrollerEl.clientWidth;
+	function sync() {
+		const max = scrollerEl.scrollWidth - scrollerEl.clientWidth;
 
-    if (max <= 1){
-      fadeEl.classList.remove("isScrollable", "atStart", "atEnd");
-      return;
-    }
+		if (max <= 1) {
+			fadeEl.classList.remove("isScrollable", "atStart", "atEnd");
+			return;
+		}
 
-    fadeEl.classList.add("isScrollable");
+		fadeEl.classList.add("isScrollable");
 
-    if (scrollerEl.scrollLeft <= 1) fadeEl.classList.add("atStart");
-    else fadeEl.classList.remove("atStart");
+		if (scrollerEl.scrollLeft <= 1) fadeEl.classList.add("atStart");
+		else fadeEl.classList.remove("atStart");
 
-    if (scrollerEl.scrollLeft >= max - 1) fadeEl.classList.add("atEnd");
-    else fadeEl.classList.remove("atEnd");
-  }
+		if (scrollerEl.scrollLeft >= max - 1) fadeEl.classList.add("atEnd");
+		else fadeEl.classList.remove("atEnd");
+	}
 
-  sync();
-  scrollerEl.addEventListener("scroll", sync, { passive:true });
+	sync();
+	scrollerEl.addEventListener("scroll", sync, {
+		passive: true
+	});
 
-  if ("ResizeObserver" in window){
-    const ro = new ResizeObserver(sync);
-    ro.observe(scrollerEl);
-    ro.observe(fadeEl);
-  } else {
-    window.addEventListener("resize", sync);
-  }
+	if ("ResizeObserver" in window) {
+		const ro = new ResizeObserver(sync);
+		ro.observe(scrollerEl);
+		ro.observe(fadeEl);
+	}
+	else {
+		window.addEventListener("resize", sync);
+	}
 }
 
 /**
@@ -674,48 +735,52 @@ export function attachFadeToScroller(scrollerEl, fadeEl){
  * Renders pill links into #platformLinks (if present).
  */
 
-function domainFromUrl(u){
-  try { return new URL(u).hostname.replace(/^www\./, ""); }
-  catch { return ""; }
+function domainFromUrl(u) {
+	try {
+		return new URL(u).hostname.replace(/^www\./, "");
+	}
+	catch {
+		return "";
+	}
 }
 
-function faviconFor(url){
-  const dom = domainFromUrl(url);
-  if (!dom) return "";
-  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(dom)}&sz=64`;
+function faviconFor(url) {
+	const dom = domainFromUrl(url);
+	if (!dom) return "";
+	return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(dom)}&sz=64`;
 }
 
 /**
  * @param {Array<{label?:string,url:string,icon?:string}>} links
  * @param {string} hostId
  */
-export function renderPlatformLinks(links, hostId = "platformLinks"){
-  const host = document.getElementById(hostId);
-  if (!host) return;
+export function renderPlatformLinks(links, hostId = "platformLinks") {
+	const host = document.getElementById(hostId);
+	if (!host) return;
 
-  host.textContent = "";
+	host.textContent = "";
 
-  for (const item of (links || [])){
-    if (!item || !item.url) continue;
+	for (const item of (links || [])) {
+		if (!item || !item.url) continue;
 
-    const a = document.createElement("a");
-    a.className = "platformLink";
-    a.href = item.url;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
+		const a = document.createElement("a");
+		a.className = "platformLink";
+		a.href = item.url;
+		a.target = "_blank";
+		a.rel = "noopener noreferrer";
 
-    const img = document.createElement("img");
-    img.className = "platformIcon";
-    img.alt = "";
-    img.src = item.icon || faviconFor(item.url);
+		const img = document.createElement("img");
+		img.className = "platformIcon";
+		img.alt = "";
+		img.src = item.icon || faviconFor(item.url);
 
-    const span = document.createElement("span");
-    span.textContent = item.label || domainFromUrl(item.url) || item.url;
+		const span = document.createElement("span");
+		span.textContent = item.label || domainFromUrl(item.url) || item.url;
 
-    a.appendChild(img);
-    a.appendChild(span);
-    host.appendChild(a);
-  }
+		a.appendChild(img);
+		a.appendChild(span);
+		host.appendChild(a);
+	}
 }
 
 /**
@@ -725,18 +790,18 @@ export function renderPlatformLinks(links, hostId = "platformLinks"){
  * If omitted, it tries to infer from the current path as a fallback.
  */
 export function autoMarkActiveTab(pageKey) {
-  function inferKeyFromPath() {
-    const p = location.pathname.toLowerCase();
-    // tolerate both "/pages/about/" and "/about/" structures
-    if (p.includes("/settings/")) return "settings";
-    if (p.includes("/about/")) return "about";
-    return "timers";
-  }
+	function inferKeyFromPath() {
+		const p = location.pathname.toLowerCase();
+		// tolerate both "/pages/about/" and "/about/" structures
+		if (p.includes("/settings/")) return "settings";
+		if (p.includes("/about/")) return "about";
+		return "timers";
+	}
 
-  const key = String(pageKey || inferKeyFromPath()).toLowerCase();
+	const key = String(pageKey || inferKeyFromPath()).toLowerCase();
 
-  document.querySelectorAll(".tabs .tabBtn").forEach((a) => {
-    const k = (a.getAttribute("data-tab") || "").toLowerCase();
-    a.classList.toggle("active", k === key);
-  });
+	document.querySelectorAll(".tabs .tabBtn").forEach((a) => {
+		const k = (a.getAttribute("data-tab") || "").toLowerCase();
+		a.classList.toggle("active", k === key);
+	});
 }

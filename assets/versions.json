@@ -108,6 +108,9 @@
 		],
 		"1.4.9": [
 			"Adjusted refresh button opacity."
+		],
+		"1.4.10": [
+			"Removed refresh button and pinned tabs bar. (Switching tabs or selecting your current tab in the list will achieve the same result.)"
 		]
 	}
 }
