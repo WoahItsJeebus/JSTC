@@ -127,6 +127,9 @@
 		],
 		"1.4.14": [
 			"Changed main page's \"Temporary\" label to \"Limited Time\"."
+		],
+		"1.4.15": [
+			"Added custom slider theme."
 		]
 	}
 }

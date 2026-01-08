@@ -697,6 +697,75 @@ a.platformLink:active{
   flex-wrap:wrap;
 }
 
+/* Slider contrast + theme */
+.sliderControl input[type="range"]{
+  width: min(420px, 100%);
+  accent-color: rgb(59, 108, 182);           /* modern browsers */
+  height: 28px;                        /* gives thumb room */
+  background: transparent;
+}
+
+/* WebKit (Safari/iOS/Chrome/Edge) */
+.sliderControl input[type="range"]::-webkit-slider-runnable-track{
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(231,237,247,.18);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.sliderControl input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+
+  background: var(--text);
+  border: 1px solid rgba(255,255,255,.18);
+
+  /* “glow” to pop off dark bg */
+  box-shadow:
+    0 0 0 4px rgba(52, 60, 70, 0.18),
+    0 6px 18px rgba(0,0,0,.45);
+
+  margin-top: -6px; /* centers thumb on 8px track */
+}
+
+.sliderControl input[type="range"]:hover::-webkit-slider-thumb{
+  box-shadow:
+    0 0 0 5px rgba(96, 123, 158, 0.199),
+    0 8px 22px rgba(0,0,0,.55);
+}
+
+.sliderControl input[type="range"]:focus{
+  outline: none;
+}
+
+.sliderControl input[type="range"]:focus-visible::-webkit-slider-thumb{
+  box-shadow:
+    0 0 0 6px rgba(61, 143, 220, 0.28),
+    0 8px 22px rgba(0,0,0,.55);
+}
+
+/* Firefox */
+.sliderControl input[type="range"]::-moz-range-track{
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(231,237,247,.18);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.sliderControl input[type="range"]::-moz-range-thumb{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--text);
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 0 0 4px rgba(52, 60, 70, 0.18),
+    0 6px 18px rgba(0,0,0,.45);
+}
+
 input[type="text"],
 input[type="number"],
 select,
