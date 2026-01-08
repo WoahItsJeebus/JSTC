@@ -116,6 +116,9 @@
 			"Adjusted tabs container size.",
 			"Added lower padding to the page for tab bar space.",
 			"Removed underlining from each tab button."
+		],
+		"1.4.12": [
+			"Force aspect ratio 1:1 for tab dots."
 		]
 	}
 }

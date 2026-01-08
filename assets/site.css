@@ -498,7 +498,7 @@ a.platformLink:active{
 	background: transparent;
 	color: var(--muted);
 	text-decoration: none;
-	
+
 	padding: 8px 12px;
 	border-radius: 12px;
 	cursor: pointer;
@@ -537,6 +537,7 @@ a.platformLink:active{
   width:  8px;
   height: 8px;
   border-radius: 50%;
+  aspect-ratio: 1 / 1;
   background: rgba(231,237,247,.35);
 }
 
