@@ -42,9 +42,9 @@
 								<thead>
 									<tr>
 										<th style="width:28%">Timer</th>
+										<th style="width:24%">Remaining</th>
 										<th style="width:24%">Next (Local)</th>
 										<th style="width:24%">Next (UTC)</th>
-										<th style="width:24%">Remaining</th>
 									</tr>
 								</thead>
 								<tbody id="dailyBody"></tbody>
@@ -64,9 +64,9 @@
 								<thead>
 									<tr>
 										<th style="width:28%">Timer</th>
+										<th style="width:24%">Remaining</th>
 										<th style="width:24%">Next (Local)</th>
 										<th style="width:24%">Next (UTC)</th>
-										<th style="width:24%">Remaining</th>
 									</tr>
 								</thead>
 								<tbody id="weeklyBody"></tbody>
@@ -86,9 +86,9 @@
 								<thead>
 									<tr>
 										<th style="width:28%">Timer</th>
+										<th style="width:24%">Remaining</th>
 										<th style="width:24%">End (Local)</th>
 										<th style="width:24%">End (UTC)</th>
-										<th style="width:24%">Remaining</th>
 									</tr>
 								</thead>
 								<tbody id="tempBody"></tbody>
@@ -303,9 +303,9 @@
 				if (trClass) tr.className = trClass;
 				tr.innerHTML = `
 					<td>${escapeHtml(name)}</td>
+					<td class="mono muted">${escapeHtml(remainStr)}</td>
 					<td class="mono muted">${escapeHtml(colLocal)}</td>
 					<td class="mono muted">${escapeHtml(colUtc)}</td>
-					<td class="mono muted">${escapeHtml(remainStr)}</td>
 				`;
 				bodyEl.appendChild(tr);
 			}

@@ -130,6 +130,9 @@
 		],
 		"1.4.15": [
 			"Added custom slider theme."
+		],
+		"1.4.16": [
+			"Moved remaining time slot to the front of each timer for better viewing on smaller screens."
 		]
 	}
 }
