@@ -119,6 +119,11 @@
 		],
 		"1.4.12": [
 			"Force aspect ratio 1:1 for tab dots."
+		],
+		"1.4.13": [
+			"Adjusted tab bar border radius. (More rounded edges)",
+			"Added transition animation to tab bar button highlights.",
+			"Background on tab bar now becomes more opaque when hovering with a mouse or tapping."
 		]
 	}
 }
