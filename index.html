@@ -132,13 +132,16 @@
 			 *       the row stays visible and shows ENDED.
 			 */
 			const timers = [
-				{ name: "Daily Challenges Reset",  kind: "daily",  time: "12:00:00", enabled: true },
-				{ name: "Weekly Challenges Reset", kind: "weekly", day: 2, time: "12:00:00", enabled: true }, // Tuesday
-				{ name: "Winter Roll-stice Event", kind: "temp", end: "2026-01-14 12:00:00", tz: "America/Chicago", enabled: true },
-				{ name: "Sub-Zero Shred Shop", kind: "temp", end: "2026-01-14 12:00:00", tz: "America/Chicago", enabled: true },
-				{ name: "2026 Countdown Bundle", kind: "temp", end: "2026-01-06 12:00:00", tz: "America/Chicago", enabled: true },
-				{ name: "SCI-FI Bundle", kind: "temp", end: "2026-01-13 12:00:00", tz: "America/Chicago", enabled: true },
-			
+				// Recurring timers
+				{ name: "Daily Challenges Reset",  	kind: "daily",  time: "11:00:00", enabled: true },
+				{ name: "Weekly Challenges Reset", 	kind: "weekly", day: 2, time: "11:00:00", enabled: true }, // Tuesday
+				
+				// Temporary timers
+				{ name: "Winter Roll-stice Event", 	kind: "temp", end: "2026-01-14 11:00:00", tz: "America/Chicago", enabled: true },
+				{ name: "Sub-Zero Shred Shop", 		kind: "temp", end: "2026-01-14 11:00:00", tz: "America/Chicago", enabled: true },
+				{ name: "2026 Countdown Bundle", 	kind: "temp", end: "2026-01-06 11:00:00", tz: "America/Chicago", enabled: true },
+				{ name: "SCI-FI Bundle", 			kind: "temp", end: "2026-01-13 11:00:00", tz: "America/Chicago", enabled: true },
+				
 				// Example temporary timer:
 				// { name: "Event Ends", kind: "temp", end: "2026-01-31 11:00:00", tz: "America/Chicago", enabled: true },
 				// Or:
