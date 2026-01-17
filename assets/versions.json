@@ -133,6 +133,9 @@
 		],
 		"1.4.16": [
 			"Moved remaining time slot to the front of each timer for better viewing on smaller screens."
+		],
+		"1.4.17": [
+			"Added 'Ended' section for timers that have passed their end time."
 		]
 	}
 }
