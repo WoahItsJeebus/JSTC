@@ -136,6 +136,9 @@
 		],
 		"1.4.17": [
 			"Added 'Ended' section for timers that have passed their end time."
+		],
+		"1.4.18": [
+			"Added a 30 day auto-remove for ended timers to prevent clutter."
 		]
 	}
 }

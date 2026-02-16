@@ -97,7 +97,7 @@
 				</section>
 				<section class="card span2" id="endedSection">
 					<div class="head">
-						<div class="title"><span class="statusDot off" id="endedDot"></span>Ended</div>
+						<div class="title"><span class="statusDot off" id="endedDot"></span>Ended (Removed after 30 days)</div>
 					</div>
 					<div class="fadeWrap fadeScroll" id="endedFade">
 						<div class="tableScroll" id="endedScroll">
@@ -392,8 +392,8 @@
 				let tempRowCount = 0;
 				let endedRowCount = 0;
 
-				const days = 0;
-				const THREE_DAYS_SEC = days * 86400;
+				const THREE_DAYS_SEC = 3 * 86400;
+				const MONTH_SEC = 30 * 86400; // for rough "old enough to hide" threshold on ended timers
 
 				for (const t of timers){
 					if (!t || !t.enabled) continue;
@@ -403,54 +403,57 @@
 
 					// -------- TEMP TIMERS --------
 					if (kind === "temp"){
-					const endUtc = tempEndUtcDate(t);
+						const endUtc = tempEndUtcDate(t);
 
-					// Handle config error safely (endUtc could be null)
-					if (!endUtc){
-						// Keep config errors visible in Limited Time
-						addRowTo(tempBody, name, "CONFIG ERROR", "—", "—");
-						tempRowCount++;
+						// Handle config error safely (endUtc could be null)
+						if (!endUtc){
+							// Keep config errors visible in Limited Time
+							addRowTo(tempBody, name, "CONFIG ERROR", "—", "—");
+							tempRowCount++;
+							continue;
+						}
+
+						const remainingRaw = Math.floor((endUtc.getTime() - nowUtc.getTime()) / 1000);
+
+						// Active
+						if (remainingRaw > 0){
+							const remaining = remainingRaw;
+							hasActiveTemp = true;
+							minTemp = Math.min(minTemp, remaining);
+
+							addRowTo(
+							tempBody,
+							name,
+							fmtLocal(endUtc),
+							fmtUtc(endUtc),
+							formatDuration(remaining)
+							);
+							tempRowCount++;
+							continue;
+						}
+
+						// Ended
+						const endedAgeSec = Math.abs(remainingRaw); // seconds since end
+
+						const targetBody = (endedAgeSec >= MONTH_SEC) ? undefined : (endedAgeSec >= 0) ? endedBody : tempBody;
+						const trClass = "ended";
+
+						if (targetBody) {
+							addRowTo(
+								targetBody,
+								name,
+								fmtLocal(endUtc),
+								fmtUtc(endUtc),
+								"Ended " + formatDuration(endedAgeSec) + " ago",
+								trClass
+							);
+						}
+
+
+						if (targetBody === endedBody) endedRowCount++;
+						else if (targetBody === tempBody) tempRowCount++;
+
 						continue;
-					}
-
-					const remainingRaw = Math.floor((endUtc.getTime() - nowUtc.getTime()) / 1000);
-
-					// Active
-					if (remainingRaw > 0){
-						const remaining = remainingRaw;
-						hasActiveTemp = true;
-						minTemp = Math.min(minTemp, remaining);
-
-						addRowTo(
-						tempBody,
-						name,
-						fmtLocal(endUtc),
-						fmtUtc(endUtc),
-						formatDuration(remaining)
-						);
-						tempRowCount++;
-						continue;
-					}
-
-					// Ended
-					const endedAgeSec = Math.abs(remainingRaw); // seconds since end
-
-					const targetBody = (endedAgeSec >= THREE_DAYS_SEC) ? endedBody : tempBody;
-					const trClass = "ended";
-
-					addRowTo(
-						targetBody,
-						name,
-						fmtLocal(endUtc),
-						fmtUtc(endUtc),
-						"Ended " + formatDuration(endedAgeSec) + " ago",
-						trClass
-					);
-
-					if (targetBody === endedBody) endedRowCount++;
-					else tempRowCount++;
-
-					continue;
 					}
 
 					// -------- RECURRING TIMERS --------
